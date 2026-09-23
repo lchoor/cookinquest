@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+.worktrees/
+.superpowers/
+.build-cache/
+prototype/dist/
+.env
+.env.*
+!.env.example
+*.pem
+*.key

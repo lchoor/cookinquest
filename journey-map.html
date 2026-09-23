@@ -1,0 +1,522 @@
+<title>CookIndia Quest: Journey Map</title>
+<style>
+  :root{
+    --paper:#FDFBF6; --mint:#EAF6F2; --card:#FFFFFF; --ink:#0E2E2B; --ink-soft:#45615D;
+    --teal:#0E9B94; --teal-deep:#0B6862; --aqua:#BFE9E1;
+    --coral:#FF5D73; --coral-soft:#FFE3E7;
+    --marigold:#FFB52E; --marigold-deep:#C97F00; --marigold-soft:#FFF0D4;
+    --purple:#8B5CF6; --lilac:#9D8DF1; --purple-soft:#EFE9FE; --lavender:#F4F0FC;
+    --pink:#EC5FAF; --pink-soft:#FCE9F4;
+    --graphite:#2B3230; --graphite-soft:#E7E5DE;
+    --radius:26px; --radius-sm:16px;
+    --shadow-sm:0 2px 10px rgba(14,46,43,.06);
+    --shadow-md:0 14px 40px -12px rgba(14,46,43,.18);
+    --display:'DM Sans','Avenir Next','Trebuchet MS',sans-serif;
+    --body:'Inter','Helvetica Neue',Arial,sans-serif;
+    --fs-heading: clamp(1.9rem, 3.6vw, 2.7rem);
+    --fs-lead: 1.2rem;
+    --fs-base: 1rem;
+    --fs-xs: .8rem;
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E2420; --mint:#123430; --card:#153B36; --ink:#EAF6F2; --ink-soft:#9FC9C2;
+    --teal:#2FBFB5; --teal-deep:#57D6CB; --aqua:#1E5750;
+    --coral:#FF8093; --coral-soft:#42232B;
+    --marigold:#FFC65C; --marigold-deep:#FFD98A; --marigold-soft:#3E2C0E;
+    --purple:#A78BFA; --lilac:#C2B6FA; --purple-soft:#2A2350; --lavender:#211C38;
+    --pink:#F284C4; --pink-soft:#3B2233;
+    --graphite:#E7E5DE; --graphite-soft:#20241f;
+    --shadow-sm:0 2px 10px rgba(0,0,0,.28);
+    --shadow-md:0 14px 40px -12px rgba(0,0,0,.5);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0E2420; --mint:#123430; --card:#153B36; --ink:#EAF6F2; --ink-soft:#9FC9C2;
+      --teal:#2FBFB5; --teal-deep:#57D6CB; --aqua:#1E5750;
+      --coral:#FF8093; --coral-soft:#42232B;
+      --marigold:#FFC65C; --marigold-deep:#FFD98A; --marigold-soft:#3E2C0E;
+      --purple:#A78BFA; --lilac:#C2B6FA; --purple-soft:#2A2350; --lavender:#211C38;
+      --pink:#F284C4; --pink-soft:#3B2233;
+      --graphite:#E7E5DE; --graphite-soft:#20241f;
+      --shadow-sm:0 2px 10px rgba(0,0,0,.28);
+      --shadow-md:0 14px 40px -12px rgba(0,0,0,.5);
+    }
+  }
+
+  *{box-sizing:border-box;}
+  .page{
+    background:var(--paper); color:var(--ink); font-family:var(--body);
+    font-size:var(--fs-base); line-height:1.55; padding:clamp(1.2rem,4vw,2.6rem) 0 4rem;
+    max-width:100%; overflow-x:hidden;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:0 clamp(1rem,4vw,2rem);}
+  h1,h2,h3{font-family:var(--display); line-height:1.08; letter-spacing:-.02em; text-wrap:balance; margin:0;}
+  p{margin:0;}
+  .scrollx{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .scrollx::-webkit-scrollbar{height:8px;}
+  .scrollx::-webkit-scrollbar-thumb{background:var(--ink-soft); opacity:.3; border-radius:99px;}
+
+  /* ---------- Masthead ---------- */
+  .masthead{padding-bottom:clamp(1.6rem,4vw,2.4rem);}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:.5rem; font-size:var(--fs-xs);
+    text-transform:uppercase; letter-spacing:.2em; font-weight:600; color:var(--teal-deep);
+    margin-bottom:.7rem;
+  }
+  .eyebrow::before{content:""; width:20px; height:2px; background:linear-gradient(90deg,var(--teal),var(--pink)); border-radius:2px;}
+  .masthead h1{font-size:var(--fs-heading); font-weight:700; max-width:20ch;}
+  .masthead .lede{font-size:var(--fs-base); color:var(--ink-soft); max-width:56ch; margin-top:.9rem;}
+  .meta-row{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.3rem;}
+  .meta-chip{
+    background:var(--card); border:1px solid rgba(69,97,93,.14); border-radius:999px;
+    padding:.4rem .85rem; font-size:var(--fs-xs); font-weight:600; color:var(--ink-soft);
+    box-shadow:var(--shadow-sm);
+  }
+
+  /* ---------- Spine overview ---------- */
+  .spine-section{padding:1.4rem 0 2rem;}
+  .spine-title{font-size:var(--fs-xs); text-transform:uppercase; letter-spacing:.16em; font-weight:700; color:var(--ink-soft); margin-bottom:1rem;}
+  .spine{
+    display:grid; grid-template-columns:repeat(7,minmax(128px,1fr)); gap:.5rem;
+    min-width:900px; position:relative; padding-bottom:2.6rem;
+  }
+  .spine-node{
+    background:var(--card); border-radius:var(--radius-sm); padding:.9rem .8rem .8rem;
+    box-shadow:var(--shadow-sm); border-top:4px solid var(--accent);
+    display:flex; flex-direction:column; gap:.25rem; position:relative;
+  }
+  .spine-node .num{font-size:var(--fs-xs); font-weight:700; color:var(--accent);}
+  .spine-node .name{font-family:var(--display); font-weight:700; font-size:.98rem;}
+  .spine-node .loop-badge{
+    position:absolute; top:-.55rem; right:-.4rem; background:var(--marigold); color:var(--graphite);
+    font-size:.68rem; font-weight:800; padding:.15rem .45rem; border-radius:999px;
+    box-shadow:var(--shadow-sm);
+  }
+  .spine-arrow{
+    position:absolute; top:2.2rem; width:1.4rem; height:1px; background:var(--ink-soft); opacity:.35;
+  }
+  .thread{
+    grid-column:4 / 7; grid-row:2; margin-top:.6rem; position:relative;
+    border-radius:999px; background:var(--marigold-soft); border:1.5px dashed var(--marigold-deep);
+    padding:.55rem .9rem; display:flex; align-items:center; gap:.5rem; flex-wrap:nowrap;
+  }
+  .thread .thread-label{
+    font-size:var(--fs-xs); font-weight:800; color:var(--marigold-deep); text-transform:uppercase;
+    letter-spacing:.08em; white-space:nowrap;
+  }
+  .thread .beads{display:flex; align-items:center; gap:.4rem; flex-wrap:nowrap; font-size:.78rem; font-weight:600; color:var(--graphite); white-space:nowrap;}
+  .thread .beads span.step{background:var(--card); border-radius:999px; padding:.2rem .55rem; white-space:nowrap;}
+  .thread .beads .arrow{color:var(--marigold-deep); font-weight:800;}
+
+  /* ---------- Phase bands ---------- */
+  .phases{display:flex; flex-direction:column; gap:1.1rem; padding:.5rem 0 2rem;}
+  .phase{
+    background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow-sm);
+    padding:clamp(1.3rem,3vw,2rem); border-left:6px solid var(--accent);
+  }
+  .phase-head{display:flex; align-items:baseline; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem;}
+  .phase-head .phase-no{
+    font-family:var(--display); font-size:var(--fs-xs); font-weight:800; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent); background:var(--accent-soft);
+    padding:.3rem .7rem; border-radius:999px;
+  }
+  .phase-head h2{font-size:1.55rem; font-weight:700;}
+  .phase-screens{display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1.2rem;}
+  .chip{
+    font-size:var(--fs-xs); font-weight:600; color:var(--ink); background:var(--mint);
+    border-radius:999px; padding:.35rem .75rem;
+  }
+  .tag-new{
+    font-size:.68rem; font-weight:800; color:var(--marigold-deep); background:var(--marigold-soft);
+    border:1px dashed var(--marigold-deep); border-radius:999px; padding:.12rem .5rem; margin-left:.4rem;
+    white-space:nowrap; display:inline-block;
+  }
+  .phase-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:.9rem;}
+  .cell{padding:.9rem 1rem; border-radius:14px; background:var(--mint);}
+  .cell .label{font-size:var(--fs-xs); text-transform:uppercase; letter-spacing:.1em; font-weight:800; color:var(--ink-soft); display:block; margin-bottom:.35rem;}
+  .cell.economic{background:var(--marigold-soft); border:1px solid var(--marigold-deep); border-style:dashed;}
+  .cell.economic .label{color:var(--marigold-deep);}
+  .cell p{font-size:.94rem; color:var(--ink);}
+
+  /* ---------- Loop diagram (Phase 3) ---------- */
+  .loop-wrap{margin-bottom:1.4rem;}
+  .loop-strip-label{
+    display:flex; align-items:center; gap:.6rem; margin-bottom:.8rem; flex-wrap:wrap;
+  }
+  .loop-pill{
+    background:var(--teal); color:#fff; font-weight:800; font-size:.78rem; letter-spacing:.05em;
+    padding:.32rem .8rem; border-radius:999px;
+  }
+  .loop-track{display:flex; gap:.7rem; min-width:1080px; padding-bottom:.5rem;}
+  .loop-step{
+    flex:0 0 148px; background:var(--mint); border-radius:16px; padding:.85rem .8rem;
+    display:flex; flex-direction:column; gap:.3rem; position:relative;
+  }
+  .loop-step .step-no{font-size:.68rem; font-weight:800; color:var(--teal-deep);}
+  .loop-step .step-name{font-family:var(--display); font-weight:700; font-size:.92rem;}
+  .loop-step .step-detail{font-size:.76rem; color:var(--ink-soft); line-height:1.4;}
+  .loop-step.money{background:var(--marigold-soft); border:1px dashed var(--marigold-deep);}
+  .loop-step.money .step-detail{color:var(--marigold-deep); font-weight:600;}
+  .loop-step::after{
+    content:"›"; position:absolute; right:-1.15rem; top:50%; transform:translateY(-50%);
+    color:var(--ink-soft); opacity:.4; font-size:1.3rem; font-weight:700;
+  }
+  .loop-step:last-child::after{content:none;}
+  .loop-back{
+    margin-top:.7rem; display:flex; align-items:center; gap:.5rem; font-size:.82rem; font-weight:600;
+    color:var(--teal-deep);
+  }
+  .loop-back .rep{
+    background:var(--teal); color:#fff; font-weight:800; font-size:.7rem; padding:.15rem .55rem; border-radius:999px;
+  }
+
+  /* ---------- Price ladder ---------- */
+  .ladders{display:grid; grid-template-columns:1.3fr 1fr; gap:1rem; margin-top:1.2rem;}
+  @media (max-width:760px){ .ladders{grid-template-columns:1fr;} }
+  .ladder-card{background:var(--mint); border-radius:16px; padding:1rem 1.1rem;}
+  .ladder-card h3{font-size:1.02rem; font-weight:700; margin-bottom:.7rem;}
+  table.ladder{width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums;}
+  table.ladder td{padding:.4rem 0; font-size:.9rem; border-bottom:1px solid rgba(69,97,93,.14);}
+  table.ladder tr:last-child td{border-bottom:none;}
+  table.ladder td.price{text-align:right; font-weight:700; color:var(--ink);}
+  table.ladder td.tier0 .price{color:var(--teal-deep);}
+  .mini-ladders{display:flex; flex-direction:column; gap:.6rem;}
+  .mini-ladder{font-size:.82rem;}
+  .mini-ladder .mname{font-weight:700; display:block; margin-bottom:.15rem;}
+  .mini-ladder .mvals{color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+
+  /* ---------- Numbers strip ---------- */
+  .numbers{padding:.5rem 0 2rem;}
+  .numbers-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:.8rem;}
+  @media (max-width:900px){ .numbers-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:520px){ .numbers-grid{grid-template-columns:1fr;} }
+  .stat{
+    background:var(--card); border-radius:16px; padding:1rem 1.1rem; box-shadow:var(--shadow-sm);
+    border-top:3px solid var(--marigold);
+  }
+  .stat .val{font-family:var(--display); font-size:var(--fs-lead); font-weight:800; font-variant-numeric:tabular-nums; color:var(--ink);}
+  .stat .cap{font-size:var(--fs-xs); color:var(--ink-soft); margin-top:.15rem;}
+
+  /* ---------- Gaps / designed-now panel ---------- */
+  .gaps{
+    margin-top:1rem; background:var(--graphite-soft); border-radius:var(--radius);
+    padding:clamp(1.3rem,3vw,2.2rem); border:1px dashed var(--marigold-deep);
+    position:relative; overflow:hidden;
+  }
+  .gaps::before{
+    content:""; position:absolute; inset:0 0 auto 0; height:6px;
+    background:repeating-linear-gradient(-45deg, var(--marigold) 0 14px, var(--graphite) 14px 28px);
+    opacity:.7;
+  }
+  .gaps-head{display:flex; flex-direction:column; gap:.6rem; margin-bottom:1.3rem;}
+  .stamp{
+    align-self:flex-start; font-family:var(--display); font-weight:800; font-size:.85rem;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--marigold-deep);
+    border:2.5px solid var(--marigold-deep); border-radius:8px; padding:.35rem .8rem;
+    transform:rotate(-2deg);
+  }
+  .gaps-head p{color:var(--ink-soft); max-width:66ch; font-size:.94rem;}
+  .gap-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1rem;}
+  .gap-item{
+    display:grid; grid-template-columns:2.4rem 1fr; gap:.9rem; background:var(--card);
+    border-radius:14px; padding:.9rem 1.1rem; align-items:start;
+  }
+  .gap-no{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-weight:800; font-size:1.3rem;
+    color:var(--marigold-deep); background:var(--marigold-soft); border-radius:8px;
+    width:2.4rem; height:2.4rem; display:flex; align-items:center; justify-content:center;
+  }
+  .gap-item h3{font-size:.98rem; font-weight:700; margin-bottom:.3rem;}
+  .gap-item .gap-was{font-size:.85rem; color:var(--ink-soft); margin-bottom:.4rem;}
+  .gap-item .gap-decision{font-size:.85rem; font-weight:600;}
+  .gap-item .gap-decision b{color:var(--marigold-deep); font-weight:800;}
+
+  footer.foot{margin-top:2.2rem; text-align:center; font-size:var(--fs-xs); color:var(--ink-soft);}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; animation:none !important;}
+  }
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+</style>
+
+<div class="page">
+  <div class="wrap">
+
+    <header class="masthead">
+      <span class="eyebrow">Journey map, single restaurant, Taj&nbsp;Mahal</span>
+      <h1>CookIndia Quest: the full player journey</h1>
+      <p class="lede">A one-screen map of the 2016 iPad prototype, built to sanity check the game flow before commissioning an interactive build. Read top to bottom, about a minute.</p>
+      <div class="meta-row">
+        <span class="meta-chip">2016 iPad prototype</span>
+        <span class="meta-chip">Hidden object cooking game</span>
+        <span class="meta-chip">21 distinct screen templates</span>
+        <span class="meta-chip">1 of 9 restaurant slots playable</span>
+      </div>
+    </header>
+
+    <section class="spine-section">
+      <div class="spine-title">The whole game, seven phases</div>
+      <div class="scrollx">
+        <div class="spine">
+          <div class="spine-node" style="--accent:var(--ink-soft)"><span class="num">Phase 0</span><span class="name">Entry</span></div>
+          <div class="spine-node" style="--accent:var(--purple)"><span class="num">Phase 1</span><span class="name">Commit</span></div>
+          <div class="spine-node" style="--accent:var(--coral)"><span class="num">Phase 2</span><span class="name">Choose</span></div>
+          <div class="spine-node" style="--accent:var(--teal)"><span class="num">Phase 3</span><span class="name">The Loop</span><span class="loop-badge">&times;4</span></div>
+          <div class="spine-node" style="--accent:var(--pink)"><span class="num">Phase 4</span><span class="name">Cook</span></div>
+          <div class="spine-node" style="--accent:var(--lilac)"><span class="num">Phase 5</span><span class="name">Judgement</span></div>
+          <div class="spine-node" style="--accent:var(--teal-deep)"><span class="num">Phase 6</span><span class="name">Progress</span></div>
+
+          <div class="thread">
+            <span class="thread-label">The core loop</span>
+            <div class="beads">
+              <span class="step">hunt faster</span><span class="arrow">&rarr;</span>
+              <span class="step">bigger bonus</span><span class="arrow">&rarr;</span>
+              <span class="step">better ingredients</span><span class="arrow">&rarr;</span>
+              <span class="step">more stars</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="phases">
+
+      <!-- PHASE 0 -->
+      <section class="phase" style="--accent:var(--ink-soft); --accent-soft:var(--mint)">
+        <div class="phase-head"><span class="phase-no">Phase 0</span><h2>Entry</h2></div>
+        <div class="phase-screens">
+          <span class="chip">Title screen: Play, Options, Quit, Help</span>
+          <span class="chip">Options: music, sound, clear save</span>
+          <span class="chip">Help: 6 paginated topics</span>
+        </div>
+        <div class="phase-grid">
+          <div class="cell"><span class="label">Decision</span><p>Play straight in, tune the audio, or read how the game works first.</p></div>
+          <div class="cell economic"><span class="label">Economic effect</span><p>None yet. No budget exists until a restaurant is chosen.</p></div>
+          <div class="cell"><span class="label">Feeling</span><p>Orienting. The mascot and torn paper menu set a playful tone before anything is asked of the player.</p></div>
+        </div>
+      </section>
+
+      <!-- PHASE 1 -->
+      <section class="phase" style="--accent:var(--purple); --accent-soft:var(--purple-soft)">
+        <div class="phase-head"><span class="phase-no">Phase 1</span><h2>Commit</h2></div>
+        <div class="phase-screens">
+          <span class="chip">Mode choice: Timed vs Relaxed</span>
+          <span class="chip">Quest welcome narrative</span>
+        </div>
+        <div class="phase-grid">
+          <div class="cell"><span class="label">Decision</span><p>Timed or Relaxed: the only real fork before the map opens.</p></div>
+          <div class="cell economic"><span class="label">Economic effect</span><p>Timed runs a hunt countdown and pays both bonuses. Relaxed drops the countdown and pays the Speed Bonus only.<span class="tag-new">designed now, gap 5</span></p></div>
+          <div class="cell"><span class="label">Feeling</span><p>Anticipation. Choosing a difficulty before the player has even seen the map.</p></div>
+        </div>
+      </section>
+
+      <!-- PHASE 2 -->
+      <section class="phase" style="--accent:var(--coral); --accent-soft:var(--coral-soft)">
+        <div class="phase-head"><span class="phase-no">Phase 2</span><h2>Choose</h2></div>
+        <div class="phase-screens">
+          <span class="chip">KhannaTown map</span>
+          <span class="chip">3&times;3 restaurant grid, Taj Mahal unlocked</span>
+          <span class="chip">Taj Mahal welcome</span>
+        </div>
+        <div class="phase-grid">
+          <div class="cell"><span class="label">Decision</span><p>Tap Taj Mahal, the only unlocked tile of nine. <span class="tag-new">gap 4</span></p></div>
+          <div class="cell economic"><span class="label">Economic effect</span><p>A fresh $100 starting budget is granted for this restaurant.</p></div>
+          <div class="cell"><span class="label">Feeling</span><p>Curiosity plus a little restraint. Eight padlocked restaurants signal a bigger world still ahead.</p></div>
+        </div>
+      </section>
+
+      <!-- PHASE 3: THE LOOP -->
+      <section class="phase" style="--accent:var(--teal); --accent-soft:var(--mint)">
+        <div class="phase-head"><span class="phase-no">Phase 3</span><h2>The Loop</h2></div>
+        <div class="phase-screens">
+          <span class="chip">Course hub: 4 courses, 0/15 each</span>
+        </div>
+
+        <div class="loop-wrap">
+          <div class="loop-strip-label">
+            <span class="loop-pill">One course, repeated 4 times</span>
+            <span class="chip">Beverage &rarr; Appetizer &rarr; Entree &rarr; Dessert</span>
+          </div>
+          <div class="scrollx">
+            <div class="loop-track">
+              <div class="loop-step">
+                <span class="step-no">01</span>
+                <span class="step-name">Course hub</span>
+                <span class="step-detail">Pick any of the 4 course tiles, each tracked as X of 15 found.</span>
+              </div>
+              <div class="loop-step money">
+                <span class="step-no">02</span>
+                <span class="step-name">Hidden object hunt</span>
+                <span class="step-detail">Hint costs $20. A wrong tap costs $2.<span class="tag-new">gap 3</span></span>
+              </div>
+              <div class="loop-step">
+                <span class="step-no">03</span>
+                <span class="step-name">Found item popup</span>
+                <span class="step-detail">Item named and explained, one of 15 per course, 60 total.</span>
+              </div>
+              <div class="loop-step money">
+                <span class="step-no">04</span>
+                <span class="step-name">Congratulations</span>
+                <span class="step-detail">Speed Bonus $10 to $15, Time Bonus $10 to $16.<span class="tag-new">gap 2</span></span>
+              </div>
+              <div class="loop-step">
+                <span class="step-no">05</span>
+                <span class="step-name">Shopping list</span>
+                <span class="step-detail">Choose one of 4 ingredient tiers, free through premium.</span>
+              </div>
+              <div class="loop-step money">
+                <span class="step-no">06</span>
+                <span class="step-name">Purchase confirmation</span>
+                <span class="step-detail">Budget deducted for the chosen tier.</span>
+              </div>
+              <div class="loop-step">
+                <span class="step-no">07</span>
+                <span class="step-name">Back to course hub</span>
+                <span class="step-detail">That course now reads 15 of 15.</span>
+              </div>
+            </div>
+          </div>
+          <div class="loop-back"><span class="rep">&times;4</span> repeats once per course until all four read 15 of 15, then advances to Cook.</div>
+        </div>
+
+        <div class="ladders">
+          <div class="ladder-card">
+            <h3>Tea price ladder, in full</h3>
+            <table class="ladder">
+              <tr class="tier0"><td>Lipton</td><td class="price">Free</td></tr>
+              <tr><td>TATA</td><td class="price">$10</td></tr>
+              <tr><td>Taj Mahal</td><td class="price">$20</td></tr>
+              <tr><td>Red Label Marigold</td><td class="price">$45</td></tr>
+            </table>
+          </div>
+          <div class="ladder-card">
+            <h3>Other ingredient ladders</h3>
+            <div class="mini-ladders">
+              <div class="mini-ladder"><span class="mname">Gram flour</span><span class="mvals">Free &middot; $19 &middot; $22 &middot; $35</span></div>
+              <div class="mini-ladder"><span class="mname">Rice &amp; wheat</span><span class="mvals">Free &middot; $25 &middot; $40 &middot; $65</span></div>
+              <div class="mini-ladder"><span class="mname">Semolina</span><span class="mvals">Free &middot; $6 &middot; $12 &middot; $22</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-grid" style="margin-top:1.2rem">
+          <div class="cell"><span class="label">Decision</span><p>Which course next, whether to spend on a hint, and which tier to buy once the bonus lands.</p></div>
+          <div class="cell economic"><span class="label">Economic effect</span><p>The engine room of the whole game: hints and mistakes spend budget, bonuses earn it back, tiers spend it again.</p></div>
+          <div class="cell"><span class="label">Feeling</span><p>Focused hunting, a small hit of reward at Congratulations, then a real spend decision between saving and buying the good tea.</p></div>
+        </div>
+      </section>
+
+      <!-- PHASE 4 -->
+      <section class="phase" style="--accent:var(--pink); --accent-soft:var(--pink-soft)">
+        <div class="phase-head"><span class="phase-no">Phase 4</span><h2>Cook</h2></div>
+        <div class="phase-screens">
+          <span class="chip">Prep intro</span>
+          <span class="chip">Prep station: 5 appliances</span>
+          <span class="chip">Doneness gauges: blue &rarr; green &rarr; red</span>
+        </div>
+        <div class="phase-grid">
+          <div class="cell"><span class="label">Decision</span><p>Load the right ingredient onto the right appliance and pull it before the gauge overshoots red.</p></div>
+          <div class="cell economic"><span class="label">Economic effect</span><p>No new spend here, but every ingredient on the station is whichever tier got bought back in Phase 3.</p></div>
+          <div class="cell"><span class="label">Feeling</span><p>Hands on and a little tense: a race against a gauge, with the earlier shopping choices now baked in.</p></div>
+        </div>
+      </section>
+
+      <!-- PHASE 5 -->
+      <section class="phase" style="--accent:var(--lilac); --accent-soft:var(--purple-soft)">
+        <div class="phase-head"><span class="phase-no">Phase 5</span><h2>Judgement</h2></div>
+        <div class="phase-screens">
+          <span class="chip">Final plated dish</span>
+          <span class="chip" style="color:var(--marigold-deep); background:var(--marigold-soft)">Critic review: 1 to 5 stars</span>
+        </div>
+        <div class="phase-grid">
+          <div class="cell"><span class="label">Decision</span><p>None: this is the payoff. The critic rates what was hunted, bought and cooked.</p></div>
+          <div class="cell economic"><span class="label">Economic effect</span><p>Ingredient quality, cooking performance and time taken combine into the score.<span class="tag-new">gap 1</span></p></div>
+          <div class="cell"><span class="label">Feeling</span><p>Suspense, then pride or disappointment: the one moment the whole run gets marked.</p></div>
+        </div>
+      </section>
+
+      <!-- PHASE 6 -->
+      <section class="phase" style="--accent:var(--teal-deep); --accent-soft:var(--mint)">
+        <div class="phase-head"><span class="phase-no">Phase 6</span><h2>Progress</h2></div>
+        <div class="phase-screens">
+          <span class="chip">Next restaurant unlocks</span>
+          <span class="chip">Fresh $100 budget</span>
+          <span class="chip">Replay allowed for a better rating</span>
+        </div>
+        <div class="phase-grid">
+          <div class="cell"><span class="label">Decision</span><p>Move on to the next restaurant, or replay this one for a better rating.</p></div>
+          <div class="cell economic"><span class="label">Economic effect</span><p>A brand new $100 budget per restaurant. The loop resets from zero, 6 restaurants unlock in sequence.<span class="tag-new">gap 4</span></p></div>
+          <div class="cell"><span class="label">Feeling</span><p>Momentum. A five star run feels finished, anything less invites another attempt.</p></div>
+        </div>
+      </section>
+
+    </main>
+
+    <section class="numbers">
+      <div class="spine-title">Key numbers</div>
+      <div class="numbers-grid">
+        <div class="stat"><div class="val">$100</div><div class="cap">Starting budget, per restaurant</div></div>
+        <div class="stat"><div class="val">4 &times; 15</div><div class="cap">Courses &times; hidden items, 60 total</div></div>
+        <div class="stat"><div class="val">$20</div><div class="cap">Cost per hint</div></div>
+        <div class="stat"><div class="val">-$2</div><div class="cap">Wrong tap penalty, designed now</div></div>
+        <div class="stat"><div class="val">$10 to $15</div><div class="cap">Speed Bonus, observed range</div></div>
+        <div class="stat"><div class="val">$10 to $16</div><div class="cap">Time Bonus, observed range</div></div>
+        <div class="stat"><div class="val">4 tiers</div><div class="cap">Free through premium, per ingredient</div></div>
+        <div class="stat"><div class="val">1 to 5 &#9733;</div><div class="cap">Critic rating, per restaurant visit</div></div>
+      </div>
+    </section>
+
+    <section class="gaps">
+      <div class="gaps-head">
+        <span class="stamp">Designed now, not recovered</span>
+        <p>These five mechanics had no answer anywhere in the 2016 source. Kept separate from the map above so nothing on this page is mistaken for recovered history.</p>
+      </div>
+      <ol class="gap-list">
+        <li class="gap-item">
+          <span class="gap-no">1</span>
+          <div>
+            <h3>Star thresholds and review copy</h3>
+            <p class="gap-was">No 1 to 4 star thresholds or review text existed in the source.</p>
+            <p class="gap-decision">New 25 point model: ingredients out of 12, cooking out of 10, time out of 3. <b>23 to 25 = 5 stars, 18 to 22 = 4, 12 to 17 = 3, 6 to 11 = 2, 0 to 5 = 1.</b></p>
+          </div>
+        </li>
+        <li class="gap-item">
+          <span class="gap-no">2</span>
+          <div>
+            <h3>Bonus formula</h3>
+            <p class="gap-was">No formula existed for how Speed or Time bonus was calculated.</p>
+            <p class="gap-decision">New: <b>Speed = $1 per item found unaided, max $15. Time = $1 per 10 seconds remaining against a 180 second par, max $18.</b></p>
+          </div>
+        </li>
+        <li class="gap-item">
+          <span class="gap-no">3</span>
+          <div>
+            <h3>Wrong tap penalty</h3>
+            <p class="gap-was">No penalty amount existed for a mistaken tap during the hunt.</p>
+            <p class="gap-decision">New: <b>minus $2, with a 1 second cooldown</b> before the next tap registers.</p>
+          </div>
+        </li>
+        <li class="gap-item">
+          <span class="gap-no">4</span>
+          <div>
+            <h3>Six cuisines versus nine map slots</h3>
+            <p class="gap-was">The game copy promises six different cuisines, but the map shows nine restaurant slots.</p>
+            <p class="gap-decision">Resolved as <b>9 slots, 6 playable restaurants unlocking in sequence, 3 marked coming soon.</b></p>
+          </div>
+        </li>
+        <li class="gap-item">
+          <span class="gap-no">5</span>
+          <div>
+            <h3>Timed versus Relaxed effect</h3>
+            <p class="gap-was">The choice existed on screen but had no defined mechanical effect in the source.</p>
+            <p class="gap-decision">New: <b>Timed runs a hunt countdown and pays both bonuses. Relaxed has no countdown and pays the Speed Bonus only.</b></p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <footer class="foot">CookIndia Quest, 2016 iPad prototype. Journey map prepared for internal review, not a shipped product.</footer>
+
+  </div>
+</div>

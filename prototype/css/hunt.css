@@ -1,0 +1,918 @@
+/* ============================================================================
+   CookInQuest 2026 — Hunt scene (section 2)
+   ----------------------------------------------------------------------------
+   Full-bleed, pannable/zoomable photographic scene with composited SVG
+   findables, floating pill-chip HUD (never a full-width bar, never Liquid
+   Glass over the scene — DIRECTION.md sections 2-4), and the level-complete
+   results panel. All values from css/tokens.css.
+   ========================================================================== */
+
+/* ============================================================================
+   Scene
+   ========================================================================== */
+.hunt-screen {
+  padding: 0;
+  overflow: hidden;
+  background: var(--ink-900);
+}
+
+.hunt-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.hunt-viewport:active {
+  cursor: grabbing;
+}
+
+.hunt-world {
+  position: absolute;
+  /* left/top/width/height set inline by js/hunt.js's viewport controller */
+}
+
+.hunt-world__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  filter: saturate(1.05) sepia(0.08) brightness(1.02) contrast(1);
+}
+
+/* Accessible spatial search cursor (spec section 8) — a visible focus rect
+   for sighted keyboard users; VoiceOver/AT users get the live-region
+   announcement instead. Never reveals hotspot positions, only named zones. */
+.hunt-spatial-cursor {
+  position: absolute;
+  border: 2px dashed var(--marigold-hi);
+  border-radius: var(--r-chip);
+  box-shadow: 0 0 0 2000px rgba(10, 5, 2, 0.12);
+  pointer-events: none;
+  transition: left var(--dur-quick) var(--ease-out), top var(--dur-quick) var(--ease-out);
+  z-index: 15;
+}
+
+/* ============================================================================
+   Sign overlays — authored Devanagari signage covering real-world scene
+   defects (DIRECTION.md section 6). Static, non-interactive, sits with the
+   findables so it receives the same atmosphere pass (layers 2/4/5, below).
+   ========================================================================== */
+.hunt-sign-overlay {
+  position: absolute;
+  pointer-events: none;
+  z-index: 14;
+  /* Perspective, not a flat head-on rectangle: the shelf edge this hangs on
+     recedes slightly to the left in the photograph, so the sign is tilted in
+     3D around its right edge (nearer to camera, stays full size) with the
+     left edge foreshortened smaller/further away. A flat rectangle here was
+     the single biggest reason it read as a UI overlay rather than a board
+     hanging in the shop. */
+  perspective: 1400px;
+}
+
+.hunt-sign-overlay svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotateY(-9deg) skewY(-0.8deg);
+  transform-origin: 88% 50%;
+  /* Matched light: knocked down from the previous high-key/crisp treatment
+     toward the shop's warm, mid-key overhead-fluorescent grade — heavier
+     sepia + lower brightness/contrast than a plain painted-board sepia pass,
+     a touch of blur to soften the vector-crisp edges, and a longer, softer
+     contact/drop shadow reading as the board casting a shadow onto the
+     shelf behind it rather than floating above the photo. */
+  filter: sepia(0.26) saturate(0.72) contrast(0.86) brightness(0.8) blur(0.4px)
+    drop-shadow(0 5px 7px rgba(8, 4, 2, 0.55));
+}
+
+/* ============================================================================
+   Findable objects (layer 3) — positioned via inline left/top/width/height %
+   set by js/hunt.js from the PLACEMENTS table.
+   ========================================================================== */
+.hunt-hotspot {
+  position: absolute;
+  overflow: visible;
+}
+
+/* Contact shadow (defect fix — composited sprites read as floating with no
+   ground contact). A soft dark ellipse anchored to the hotspot's own base —
+   xPct/yPct in PLACEMENTS is authored as the sprite's bottom-centre resting
+   point, so the box's bottom edge IS the surface line. Sits behind the
+   sprite via z-index:-1 inside the hotspot's own stacking context (the
+   inline z-index on .hunt-hotspot makes it one). Scaled per depth below. */
+.hunt-hotspot::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -3%;
+  width: 62%;
+  height: 15%;
+  transform: translate(-50%, 0);
+  background: radial-gradient(ellipse at center, rgba(8, 4, 2, 0.55) 0%, rgba(8, 4, 2, 0) 72%);
+  filter: blur(2.5px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hunt-hotspot--placeholder::before {
+  display: none;
+}
+
+.hunt-hotspot__sprite {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 100%;
+}
+
+.hunt-hotspot__sprite svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Matched light — knocked down toward the plate's mid-to-low key, warmed,
+     and softened rather than left at clean full-contrast vector values
+     (DIRECTION.md layer 3 + defect fix: sprites were reading as high-key
+     pasted stickers against the graded photo). Per-sprite overrides below
+     push particularly pale items (sugar, milk, fennel) further; depth
+     overrides add the near/far blur band. */
+  filter: sepia(0.16) saturate(0.86) contrast(0.92) brightness(0.9) drop-shadow(0 2px 3px rgba(10, 5, 2, 0.4));
+}
+
+.hunt-hotspot--placeholder .hunt-hotspot__sprite svg {
+  filter: none;
+}
+
+/* --- Per-sprite overrides: the paler/brighter the source art, the more it
+   needs pulled down to sit in this warm, mid-to-low-key photograph. --- */
+.hunt-hotspot[data-item-id="bev-sugar"] .hunt-hotspot__sprite svg {
+  /* Second pass: still the cleanest-reading object in the scene after the
+     first correction, so this pushes materially further rather than
+     incrementally — heavier sepia/desaturation, brightness down another
+     ~15pts, a touch of blur to kill the vector-crisp bag edges against the
+     softer photographic shelf behind it, and a longer/darker drop-shadow so
+     the bag reads as sitting IN the cabinet's dim light, not lit separately
+     from it. */
+  filter: sepia(0.32) saturate(0.58) contrast(0.78) brightness(0.64) blur(0.5px)
+    drop-shadow(0 4px 5px rgba(6, 3, 1, 0.6));
+}
+
+.hunt-hotspot[data-item-id="bev-sugar"]::before {
+  /* Wider, darker shadow than the default — this one needs to visibly plant
+     it on the shelf lip it now overlaps rather than the standard band.
+     First attempt at this pass spread the shadow too thin/wide (26% tall,
+     92% wide, heavily blurred) to actually register against the busy
+     shelf clutter behind it — technically painted but not legible. Pulled
+     back to a tighter, punchier patch with a near-opaque core and a short
+     falloff so it reads at a glance as contact, not diffuse haze. */
+  left: 56%;
+  width: 58%;
+  height: 15%;
+  bottom: -4.5%;
+  opacity: 0.96;
+  background: radial-gradient(ellipse at center, rgba(2, 1, 0, 0.92) 0%, rgba(2, 1, 0, 0.75) 45%, rgba(2, 1, 0, 0) 72%);
+  filter: blur(1.5px);
+}
+
+.hunt-hotspot[data-item-id="bev-milk"] .hunt-hotspot__sprite svg {
+  filter: sepia(0.16) saturate(0.85) contrast(0.94) brightness(0.9) drop-shadow(0 2px 4px rgba(10, 5, 2, 0.4));
+}
+
+.hunt-hotspot[data-item-id="bev-fennel-seeds"] .hunt-hotspot__sprite svg {
+  filter: sepia(0.2) saturate(0.78) contrast(0.88) brightness(0.84) drop-shadow(0 2px 4px rgba(10, 5, 2, 0.45));
+}
+
+/* --- Depth band (DIRECTION.md: match the scene's focus falloff — sharp
+   midground, soft near-foreground/far-background). data-depth is PLACEMENTS'
+   own z field (1 = far, 5 = near), set by js/hunt.js. z 2-4 stay sharp. --- */
+.hunt-hotspot[data-depth="1"] .hunt-hotspot__sprite svg {
+  filter: sepia(0.18) saturate(0.82) contrast(0.9) brightness(0.86) blur(1.1px) drop-shadow(0 1px 2px rgba(10, 5, 2, 0.35));
+}
+
+.hunt-hotspot[data-depth="1"]::before {
+  width: 46%;
+  height: 11%;
+  opacity: 0.7;
+}
+
+.hunt-hotspot[data-depth="5"] .hunt-hotspot__sprite svg {
+  filter: sepia(0.16) saturate(0.86) contrast(0.92) brightness(0.9) blur(0.6px) drop-shadow(0 2px 3px rgba(10, 5, 2, 0.4));
+}
+
+.hunt-hotspot[data-depth="5"]::before {
+  width: 74%;
+  height: 18%;
+  filter: blur(3.5px);
+}
+
+/* Correct-find beat: scale 1 -> 1.15 then fade, ~400ms ease-out. */
+.hunt-hotspot--finding .hunt-hotspot__sprite {
+  animation: hunt-find-pop var(--dur-find) var(--ease-out) forwards;
+}
+
+@keyframes hunt-find-pop {
+  0% { transform: scale(1); opacity: 1; }
+  45% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1.15); opacity: 0; }
+}
+
+/* Resting state after a find: faint ghost outline remains. */
+.hunt-hotspot--found {
+  outline: 1.5px dashed rgba(255, 226, 190, 0.4);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+.hunt-hotspot--found .hunt-hotspot__sprite {
+  animation: none;
+}
+
+.hunt-hotspot--found .hunt-hotspot__sprite svg {
+  opacity: 0.16;
+  filter: grayscale(1) brightness(1.6);
+}
+
+/* Hint beat: slow shimmer loop until found, never an instant reveal. */
+.hunt-hotspot--hint .hunt-hotspot__sprite {
+  animation: hunt-shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes hunt-shimmer {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 0 rgba(78, 95, 212, 0)); }
+  50% { filter: brightness(1.5) drop-shadow(0 0 14px rgba(78, 95, 212, 0.85)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hunt-hotspot--hint .hunt-hotspot__sprite {
+    animation: none;
+    filter: brightness(1.3) drop-shadow(0 0 8px rgba(78, 95, 212, 0.7));
+  }
+}
+
+/* Sparkle burst — 8-12 particles, ~500ms (tokens.css has no 500ms step; the
+   nearest documented duration, --dur-count at 600ms, is reused rather than
+   inventing a new token). */
+.hunt-particle-host {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.hunt-particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--marigold-hi) 0%, var(--saffron) 60%, transparent 100%);
+  animation: hunt-particle-burst var(--dur-count) var(--ease-out) forwards;
+}
+
+@keyframes hunt-particle-burst {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hunt-particle-host { display: none; }
+}
+
+/* ============================================================================
+   Layers 2, 4, 5 — grade/atmosphere, foreground framing, grain
+   ========================================================================== */
+.hunt-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* DIRECTION.md section 2's five-layer table puts grade/atmosphere (2),
+     foreground framing (4) and grain (5) ABOVE findable objects (3) — grain
+     and vignette are meant to fall across the whole composited scene,
+     sprites included, or the sprites never pick up the photo's shared haze
+     and texture and read as a layer pasted on top of it. This was
+     previously z-index 16, below .hunt-hotspot's 21-25, which silently
+     exempted every findable from the vignette/grade/grain pass entirely —
+     a real contributor to the "pasted sticker" defect. 27 clears the
+     highest hotspot z-index (20 + max z of 5 = 25) while staying under the
+     HUD's 30. */
+  z-index: 27;
+}
+
+/* Layer 2: warm key light on the midground, cooler/hazier toward the edges. */
+.hunt-atmosphere__grade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(65% 60% at 50% 42%, rgba(255, 201, 99, 0.10) 0%, rgba(255, 201, 99, 0) 60%),
+    radial-gradient(120% 100% at 50% 50%, rgba(78, 95, 212, 0) 45%, rgba(70, 96, 140, 0.14) 100%);
+  mix-blend-mode: soft-light;
+}
+
+/* Layer 4: darkening vignette + depth separation. */
+.hunt-atmosphere__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 100% at 50% 46%, rgba(20, 11, 7, 0) 45%, rgba(20, 11, 7, 0.42) 82%, rgba(20, 11, 7, 0.78) 100%);
+}
+
+/* Layer 4: a soft, pre-blurred out-of-focus foreground element suggesting a
+   nearer shelf/prop just outside the frame, for depth separation. */
+.hunt-atmosphere__foreground {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -18%;
+  height: 34%;
+  background: radial-gradient(60% 100% at 50% 100%, rgba(10, 5, 2, 0.55) 0%, rgba(10, 5, 2, 0) 75%);
+  filter: blur(6px);
+}
+
+/* Layer 5: SVG feTurbulence grain, low opacity. */
+.hunt-atmosphere__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .hunt-atmosphere__grain { display: none; }
+}
+
+/* ============================================================================
+   HUD — floating pill chips, 90-96% opacity, never a full-width bar.
+   ========================================================================== */
+.hunt-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.hunt-hud > * {
+  pointer-events: auto;
+}
+
+/* --- Top-left: budget + found/miss meta ---------------------------------- */
+.hunt-status {
+  position: absolute;
+  top: var(--s-4);
+  left: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  align-items: flex-start;
+}
+
+.hunt-status__budget {
+  position: relative;
+}
+
+.hunt-status__budget-value {
+  font-size: var(--fs-lg);
+}
+
+.hunt-status__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: var(--s-1) var(--s-3);
+  min-height: 0;
+}
+
+.hunt-status__found,
+.hunt-status__miss {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.hunt-status__found-value {
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  font-weight: 600;
+}
+
+@keyframes hunt-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.hunt-status--shake .hunt-status__budget {
+  animation: hunt-shake var(--dur-quick) var(--ease-in-out);
+  box-shadow: 0 0 0 2px var(--chilli), var(--shadow-chip);
+}
+
+/* --- Top-right: facts / contrast / pause --------------------------------- */
+.hunt-toolbar {
+  position: absolute;
+  top: var(--s-4);
+  right: var(--s-4);
+  display: flex;
+  gap: var(--s-2);
+}
+
+.hunt-toolbar__btn {
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+/* --- Bottom-centre: two-row ribbon of named cards, references only ------- */
+.hunt-ribbon {
+  position: absolute;
+  left: 50%;
+  bottom: var(--s-4);
+  transform: translateX(-50%);
+  width: min(1080px, 92%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  background: rgba(31, 17, 11, 0.9);
+  border: 1px solid rgba(255, 226, 190, 0.12);
+  border-radius: var(--r-panel);
+  padding: var(--s-3);
+  box-shadow: var(--shadow-panel);
+  opacity: 0.96;
+}
+
+.hunt-ribbon__row {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--s-2);
+}
+
+.hunt-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 52px;
+  padding: 4px var(--s-1);
+  border-radius: var(--r-chip);
+  background: rgba(58, 35, 24, 0.55);
+  border: 1px solid rgba(255, 226, 190, 0.08);
+  text-align: center;
+}
+
+.hunt-card__icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.hunt-card__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Every one of the 15 real names must stay legible (spec section 7) — wrap
+   rather than truncate, even if that makes a card a touch taller. */
+.hunt-card__name {
+  font-size: 10px;
+  line-height: 1.15;
+  color: var(--text);
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.hunt-card--found {
+  background: rgba(20, 69, 58, 0.4);
+  border-color: rgba(53, 196, 160, 0.35);
+  transition: opacity var(--dur-panel) var(--ease-out), transform var(--dur-panel) var(--ease-out);
+}
+
+.hunt-card--found .hunt-card__name {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--mint);
+}
+
+.hunt-card--found .hunt-card__icon {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+/* --- Bottom-right: Hint -------------------------------------------------- */
+.hunt-hint-btn {
+  position: absolute;
+  right: var(--s-4);
+  bottom: calc(var(--s-4) + 150px);
+  font-size: var(--fs-sm);
+}
+
+/* ============================================================================
+   Fact strip — nonblocking, slides in above the ribbon.
+   ========================================================================== */
+.hunt-fact-strip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--s-4) + 150px);
+  transform: translate(-50%, 12px);
+  width: min(760px, 88%);
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  background: rgba(122, 36, 25, 0.42);
+  border: 1px solid rgba(232, 98, 159, 0.4);
+  border-radius: var(--r-card);
+  padding: var(--s-2) var(--s-4);
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transition: opacity var(--dur-panel) var(--ease-out), transform var(--dur-panel) var(--ease-out);
+}
+
+.hunt-fact-strip--in {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.hunt-fact-strip__badge {
+  flex: none;
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--lotus);
+  font-weight: 700;
+}
+
+.hunt-fact-strip__title {
+  flex: none;
+  font-weight: 700;
+  color: var(--text-strong);
+  font-size: var(--fs-sm);
+}
+
+.hunt-fact-strip__body {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+
+.hunt-fact-strip__close {
+  flex: none;
+  min-width: 32px;
+  min-height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: var(--fs-md);
+  cursor: pointer;
+}
+
+/* ============================================================================
+   Facts log panel
+   ========================================================================== */
+.hunt-facts-panel {
+  position: absolute;
+  top: calc(var(--s-4) + 56px);
+  right: var(--s-4);
+  width: min(360px, 84%);
+  max-height: 60%;
+  overflow-y: auto;
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  /* Opaque HUD chrome (DIRECTION.md section 4: no glass over a hunt scene),
+     matching the ribbon/chip family rather than the .glass material. */
+  background: rgba(31, 17, 11, 0.92);
+  border: 1px solid rgba(255, 226, 190, 0.14);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-panel);
+}
+
+/* Defect fix: `display: flex` above has higher priority than the UA
+   stylesheet's `[hidden] { display: none }` (author rules beat UA rules
+   regardless of matching specificity), so the `hidden` attribute set/cleared
+   by js/hunt.js was being silently ignored — the panel rendered as a visible
+   empty bar over the scene even while `hidden` was true. This rule restores
+   `hidden` as authoritative and genuinely removes the panel from layout
+   (not just opacity/visibility) whenever it is unset. */
+.hunt-facts-panel[hidden] {
+  display: none;
+}
+
+.hunt-facts-panel__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--text-strong);
+}
+
+.hunt-facts-panel__close {
+  align-self: flex-end;
+}
+
+.hunt-facts-panel__empty {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.hunt-facts-panel__entry {
+  padding-bottom: var(--s-2);
+  border-bottom: 1px solid rgba(255, 226, 190, 0.1);
+}
+
+.hunt-facts-panel__entry-title {
+  margin: 0 0 2px;
+  font-weight: 700;
+  color: var(--lotus);
+  font-size: var(--fs-sm);
+}
+
+.hunt-facts-panel__entry-body {
+  margin: 0;
+  color: var(--text);
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+}
+
+/* ============================================================================
+   Ghost numerals + miss aura
+   ========================================================================== */
+.hunt-ghost-numeral {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  animation: hunt-ghost-rise var(--dur-count) var(--ease-out) forwards;
+  white-space: nowrap;
+}
+
+.hunt-ghost-numeral--mint { color: var(--mint); }
+.hunt-ghost-numeral--chilli { color: var(--chilli); }
+
+.hunt-ghost-numeral--floating {
+  top: auto;
+  right: auto;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes hunt-ghost-rise {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-28px); opacity: 0; }
+}
+
+.hunt-ghost-numeral--floating {
+  animation-name: hunt-ghost-rise-floating;
+}
+
+@keyframes hunt-ghost-rise-floating {
+  0% { transform: translate(-50%, -50%); opacity: 1; }
+  100% { transform: translate(-50%, calc(-50% - 28px)); opacity: 0; }
+}
+
+.hunt-miss-aura {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(229, 67, 47, 0.5) 0%, rgba(229, 67, 47, 0) 70%);
+  pointer-events: none;
+  animation: hunt-miss-pulse var(--dur-quick) var(--ease-out) forwards;
+}
+
+.hunt-miss-aura--free {
+  background: radial-gradient(circle, rgba(229, 67, 47, 0.22) 0%, rgba(229, 67, 47, 0) 70%);
+}
+
+@keyframes hunt-miss-pulse {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hunt-ghost-numeral,
+  .hunt-miss-aura {
+    animation-duration: 1ms;
+  }
+}
+
+/* ============================================================================
+   Level complete
+   ========================================================================== */
+.lc-screen {
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+}
+
+.lc-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.lc-backdrop__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.9) sepia(0.15) contrast(1.05) brightness(0.85);
+  transform: scale(1);
+  transition: transform 300ms var(--ease-out), filter 300ms var(--ease-out);
+}
+
+.lc-screen--in .lc-backdrop__img {
+  transform: scale(0.92);
+  filter: saturate(0.7) sepia(0.2) contrast(1.05) brightness(0.42) blur(4px);
+}
+
+.lc-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 11, 7, 0.55);
+}
+
+.lc-panel {
+  position: relative;
+  width: min(560px, 88%);
+  max-height: 86%;
+  overflow-y: auto;
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  opacity: 0;
+  transform: translateY(-18px) scale(0.96);
+  /* .glass's default 0.42 alpha reads fine over the app's flat ink chrome
+     (pause/help), but this panel sits over a busy dimmed photo backdrop —
+     bump opacity so the ledger stays legible without losing the glass look. */
+  background: rgba(31, 17, 11, 0.86);
+}
+
+.lc-screen--in .lc-panel {
+  animation: lc-panel-in var(--dur-panel) var(--ease-back) 60ms forwards;
+}
+
+@keyframes lc-panel-in {
+  0% { opacity: 0; transform: translateY(-18px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.lc-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-xl);
+  color: var(--text-strong);
+  text-align: center;
+}
+
+.lc-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-chip);
+  background: rgba(43, 25, 17, 0.6);
+  opacity: 0;
+  animation: lc-row-in var(--dur-panel) var(--ease-out) forwards;
+  animation-delay: 200ms;
+}
+
+@keyframes lc-row-in {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.lc-row__label {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.lc-row__value {
+  font-weight: 700;
+  color: var(--marigold-hi);
+  font-variant-numeric: tabular-nums;
+}
+
+.lc-ledger {
+  opacity: 0;
+  animation: lc-row-in var(--dur-panel) var(--ease-out) forwards;
+  animation-delay: 500ms;
+}
+
+.lc-ledger__title {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--saffron);
+}
+
+.lc-ledger__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.lc-ledger__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255, 226, 190, 0.08);
+}
+
+.lc-ledger__amount {
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.lc-budget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s-3);
+  border-radius: var(--r-card);
+  background: rgba(197, 124, 11, 0.16);
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  opacity: 0;
+  animation: lc-row-in var(--dur-panel) var(--ease-out) forwards;
+  animation-delay: 700ms;
+}
+
+.lc-budget__label {
+  font-size: var(--fs-sm);
+  color: var(--text);
+}
+
+.lc-budget__value {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--marigold-hi);
+}
+
+.lc-continue {
+  align-self: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lc-row,
+  .lc-ledger,
+  .lc-budget {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+}
+
+/* ============================================================================
+   Compact width (700x834) — structural support, spec section 2
+   ========================================================================== */
+.frame--compact .hunt-ribbon {
+  width: 96%;
+}
+
+.frame--compact .hunt-ribbon__row {
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: auto;
+}
+
+.frame--compact .hunt-card__name {
+  font-size: 10px;
+}
+
+.frame--compact .hunt-hint-btn {
+  bottom: calc(var(--s-4) + 168px);
+}
+
+.frame--compact .hunt-fact-strip {
+  bottom: calc(var(--s-4) + 168px);
+  flex-direction: column;
+  align-items: flex-start;
+}

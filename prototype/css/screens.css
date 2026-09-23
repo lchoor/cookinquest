@@ -1,0 +1,693 @@
+/* ============================================================================
+   CookInQuest 2026 — Screens
+   ----------------------------------------------------------------------------
+   Layout for title, map, courseHub, help-sheet, pause-sheet and the
+   later-build placeholder panel. Generic chrome primitives live in shell.css.
+   ========================================================================== */
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--s-6) var(--s-7);
+  animation: screen-in var(--dur-panel) var(--ease-out);
+}
+
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================================
+   Title
+   ========================================================================== */
+.screen--title {
+  padding: 0;
+  flex-direction: row;
+}
+
+.title-hero {
+  position: relative;
+  flex: 0 0 46%;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--ink-900);
+}
+
+.title-hero__art {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-image: url('../art/title-screen.jpg');
+  background-size: 300% auto;
+  background-position: 100% 2%;
+  -webkit-mask-image: radial-gradient(85% 90% at 62% 42%, black 55%, transparent 92%);
+  mask-image: radial-gradient(85% 90% at 62% 42%, black 55%, transparent 92%);
+}
+
+.title-hero__vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--ink-900) 0%, rgba(20, 11, 7, 0) 38%, rgba(20, 11, 7, 0) 100%);
+}
+
+.title-hero__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}
+
+.title-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--s-7);
+  padding: var(--s-7) var(--s-8) var(--s-7) var(--s-6);
+}
+
+.title-wordmark__eyebrow {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--saffron);
+}
+
+.title-wordmark__logo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-style: italic;
+  font-size: 4.4rem;
+  line-height: 0.98;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-strong);
+  text-shadow: 0 2px 24px rgba(245, 166, 35, 0.25);
+}
+
+.title-wordmark__tag {
+  margin: var(--s-4) 0 0;
+  max-width: 34ch;
+  color: var(--text-muted);
+  font-size: var(--fs-md);
+}
+
+.title-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+}
+
+.title-actions__resume {
+  margin: 0;
+  flex-basis: 100%;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================================
+   Map — Restaurant Row
+   ========================================================================== */
+.screen--map {
+  gap: var(--s-5);
+  /* Designed backdrop, not photography: the only clean plate we have of
+     KhannaTown is a screenshot of the 2016 map UI itself (lock icons, grid,
+     banner baked in), which read as ghosted noise fighting the new cards —
+     see DIRECTION.md defect list. Dropping it for a deliberate quiet glow
+     keeps the chrome calm and lets the route cards (and their own cuisine
+     colour) carry the "place" feeling instead. Tokens only, no new art. */
+  background:
+    radial-gradient(120% 90% at 18% -10%, rgba(245, 166, 35, 0.10) 0%, rgba(245, 166, 35, 0) 55%),
+    radial-gradient(100% 80% at 100% 110%, rgba(78, 95, 212, 0.10) 0%, rgba(78, 95, 212, 0) 55%),
+    var(--ink-800);
+}
+
+.map-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.map-header__eyebrow {
+  margin: 0 0 var(--s-1);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--saffron);
+}
+
+.map-header__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-xl);
+  color: var(--text-strong);
+}
+
+.ribbon {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-3) var(--s-5);
+  border-radius: var(--r-card);
+  max-width: 720px;
+}
+
+.ribbon__mascot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 30%;
+  flex: none;
+  box-shadow: var(--shadow-chip);
+}
+
+.ribbon__text {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.ribbon__close {
+  flex: none;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: var(--fs-md);
+}
+
+.map-trail {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: var(--s-3);
+}
+
+.map-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  text-align: center;
+  padding: var(--s-2);
+  border-radius: var(--r-card);
+  border: 1px solid rgba(255, 226, 190, 0.12);
+  background: rgba(31, 17, 11, 0.82);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur-quick) var(--ease-out);
+  min-height: 44px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.map-node:active {
+  transform: scale(0.97);
+}
+
+.map-node__badge {
+  position: relative;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 226, 190, 0.16);
+  background: var(--ink-700);
+  overflow: visible;
+}
+
+.map-node__badge-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 38%;
+}
+
+.map-node__monogram {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: var(--fs-md);
+  color: var(--paper-ink);
+}
+
+.map-node__flag {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  background: var(--ink-800);
+  border: 1px solid rgba(255, 226, 190, 0.2);
+}
+
+.map-node__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+
+.map-node__cuisine {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.map-node__state {
+  margin-top: var(--s-1);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  padding: 2px var(--s-2);
+  border-radius: var(--r-chip);
+  background: rgba(10, 5, 2, 0.3);
+  color: var(--text-muted);
+}
+
+.map-node--unlocked {
+  border-color: rgba(53, 196, 160, 0.4);
+  background: rgba(20, 69, 58, 0.55);
+}
+
+.map-node--unlocked .map-node__badge {
+  border-color: var(--mint);
+}
+
+.map-node--unlocked .map-node__state {
+  color: var(--mint);
+  background: rgba(20, 69, 58, 0.6);
+}
+
+.map-node--locked {
+  cursor: not-allowed;
+}
+
+.map-node--locked .map-node__monogram,
+.map-node--locked .map-node__badge-img {
+  filter: saturate(0.15) brightness(0.6);
+}
+
+.map-node--locked .map-node__name,
+.map-node--locked .map-node__cuisine {
+  color: var(--text-muted);
+}
+
+.map-node--soon {
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+.map-node--soon .map-node__monogram {
+  filter: saturate(0.1) brightness(0.5);
+}
+
+.map-node--soon .map-node__name,
+.map-node--soon .map-node__cuisine {
+  color: var(--text-muted);
+}
+
+.map-node[aria-disabled='true']:active {
+  transform: none;
+}
+
+/* ============================================================================
+   Course hub
+   ========================================================================== */
+.screen--hub {
+  gap: var(--s-4);
+}
+
+.hub-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.hub-header__eyebrow {
+  margin: 0 0 var(--s-1);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--saffron);
+}
+
+.hub-header__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-xl);
+  color: var(--text-strong);
+}
+
+.hub-header__actions {
+  display: flex;
+  gap: var(--s-3);
+}
+
+.hub-cards {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-4);
+}
+
+/* Course cards are the hero of this screen: full-bleed hunt-scene photography
+   (see COURSE_SCENE_ART in screens.js), warm-graded, with a bottom scrim for
+   text contrast. Photo, scrim and body are all positioned elements (relative
+   or absolute) so they paint in the deliberate order below regardless of the
+   in-flow/positioned painting-order split browsers otherwise apply. */
+.hub-card {
+  position: relative;
+  display: block;
+  text-align: left;
+  padding: 0;
+  border-radius: var(--r-card);
+  border: 1px solid rgba(255, 226, 190, 0.14);
+  background: var(--ink-700);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--dur-quick) var(--ease-out);
+  overflow: hidden;
+  min-height: 44px;
+}
+
+.hub-card:active {
+  transform: scale(0.97);
+}
+
+.hub-card__photo {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* Warm grade, lighter than the map's recede-into-chrome treatment — per
+     DIRECTION.md the photographic scene is meant to read as the brightest,
+     most appetising thing on screen, not dimmed background texture. */
+  filter: saturate(1.08) sepia(0.06) contrast(1.05) brightness(1.02);
+}
+
+.hub-card__photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .hub-card__photo::after {
+    display: none;
+  }
+}
+
+.hub-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 11, 7, 0) 0%,
+    rgba(20, 11, 7, 0.1) 40%,
+    rgba(20, 11, 7, 0.86) 80%,
+    rgba(20, 11, 7, 0.95) 100%
+  );
+}
+
+.hub-card__body {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: var(--s-1);
+  padding: var(--s-4);
+}
+
+.hub-card__badge {
+  position: absolute;
+  top: var(--s-3);
+  left: var(--s-3);
+  display: inline-flex;
+  align-items: center;
+  background: rgba(20, 69, 58, 0.88);
+  border: 1px solid rgba(53, 196, 160, 0.55);
+  color: var(--mint);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--r-chip);
+  box-shadow: var(--shadow-chip);
+}
+
+.hub-card__course {
+  margin: 0;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--saffron);
+  text-shadow: 0 1px 4px rgba(10, 5, 2, 0.85);
+}
+
+.hub-card__dish {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-lg);
+  color: var(--text-strong);
+  text-shadow: 0 2px 8px rgba(10, 5, 2, 0.8);
+}
+
+.hub-card__count {
+  margin: var(--s-1) 0 0;
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--marigold-hi);
+  text-shadow: 0 2px 8px rgba(10, 5, 2, 0.85);
+}
+
+.hub-card__status {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-strong);
+  text-shadow: 0 1px 4px rgba(10, 5, 2, 0.85);
+}
+
+.hub-card--complete {
+  border-color: rgba(53, 196, 160, 0.5);
+}
+
+.hub-card--complete .hub-card__status {
+  color: var(--mint);
+}
+
+.hub-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  padding-top: var(--s-3);
+}
+
+.hub-footer__reason {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  max-width: 46ch;
+}
+
+/* ============================================================================
+   Help sheet / Pause sheet — Liquid Glass, spec section 8
+   ========================================================================== */
+.sheet {
+  position: relative;
+  width: min(560px, 84%);
+  max-height: 80%;
+  overflow-y: auto;
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.sheet-close {
+  position: absolute;
+  top: var(--s-4);
+  right: var(--s-4);
+}
+
+.sheet-title {
+  margin: var(--s-6) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--text-strong);
+}
+
+.sheet-text {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.sheet-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.sheet-dots {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.sheet-dot {
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 226, 190, 0.2);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+  flex: none;
+}
+
+.sheet-dot--active {
+  background: var(--marigold);
+  color: var(--paper-ink);
+  border-color: var(--marigold);
+  font-weight: 700;
+}
+
+.pause-sheet {
+  width: min(360px, 84%);
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.pause-sheet__title {
+  margin: 0 0 var(--s-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--text-strong);
+  text-align: center;
+}
+
+.pause-sheet .btn {
+  width: 100%;
+}
+
+/* ============================================================================
+   Placeholder — later-build routes
+   ========================================================================== */
+.screen--placeholder {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--s-4);
+}
+
+.placeholder__eyebrow {
+  margin: 0;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.placeholder__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-xl);
+  color: var(--text-strong);
+}
+
+.placeholder__body {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--text-muted);
+}
+
+/* ============================================================================
+   Compact width (700x834) — structural support, spec section 2
+   ========================================================================== */
+.frame--compact .hub-cards {
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto;
+  overflow-y: auto;
+}
+
+/* The hero-card redesign (defect 1) needs real height for its bottom-anchored
+   text to avoid clipping against overflow:hidden — in the regular frame that
+   height comes from the grid row's 1fr share, but compact's single-column
+   list uses auto rows, so it needs an explicit floor here instead. */
+.frame--compact .hub-card {
+  min-height: 168px;
+}
+
+.frame--compact .map-trail {
+  grid-template-columns: repeat(2, 1fr);
+  /* Regular frame relies on 3 explicit 1fr rows to fit all 9 nodes without
+     overflow (defect 6). Compact's 2-column layout needs 5 rows instead, so
+     it falls back to content-sized auto rows plus scrolling rather than
+     inheriting the 3-row template. */
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+  overflow-y: auto;
+}
+
+.frame--compact .map-node {
+  min-height: 128px;
+}
+
+.frame--compact .title-hero {
+  flex-basis: 34%;
+}
+
+.frame--compact .title-wordmark__logo {
+  font-size: 3rem;
+}

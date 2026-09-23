@@ -1,0 +1,171 @@
+/* ============================================================================
+   CookInQuest 2026 — Design tokens
+   ----------------------------------------------------------------------------
+   The 2016 original was warm, hand-made and homespun: torn paper, hand lettering,
+   a cartoon mascot, bright photographic scenes. The 2026 remake keeps that warmth
+   but moves the CHROME into deep roasted spice tones, so the photographic hunt
+   scenes read as the brightest thing on screen. That inversion is the whole
+   visual thesis: dark, quiet interface — luminous, dominant scene.
+
+   Reference points: June's Journey / Hidden City use deep jewel-toned chrome for
+   exactly this reason. Apple iPadOS 26 Liquid Glass lives ONLY in the floating
+   control layer, never over a hunt scene (spec section 8, and scene legibility
+   outranks material fashion).
+   ========================================================================== */
+
+:root {
+  /* --- Spice-dark chrome ------------------------------------------------ */
+  --ink-900: #140B07;   /* deepest — scrims, letterboxing               */
+  --ink-800: #1F110B;   /* app background                                */
+  --ink-700: #2B1911;   /* raised panels                                 */
+  --ink-600: #3A2318;   /* panel edges, dividers                         */
+  --ink-500: #55372A;   /* muted strokes                                 */
+
+  /* --- Warm paper (the 2016 torn-paper lineage, cleaned up) ------------- */
+  --paper-100: #FBF5E9;
+  --paper-200: #F3E8D4;
+  --paper-300: #E4D2B6;
+  --paper-ink: #2A1A12;
+
+  /* --- Accents ---------------------------------------------------------- */
+  --marigold: #F5A623;      /* primary action, currency, brass           */
+  --marigold-hi: #FFC963;   /* highlight / specular on marigold          */
+  --marigold-lo: #C77C0B;   /* pressed / shadow side                     */
+
+  --saffron: #FF7A2F;       /* secondary warmth, found-item glow          */
+  --chilli: #E5432F;        /* penalty, miss, unaffordable                */
+  --chilli-soft: #7A2419;
+
+  --mint: #35C4A0;          /* confirm, found, affordable                 */
+  --mint-soft: #14453A;
+
+  --lotus: #E8629F;         /* fact strips, educational moments           */
+  --indigo: #4E5FD4;        /* hint / assisted target                     */
+
+  /* --- Semantic --------------------------------------------------------- */
+  --text-strong: #FBF5E9;
+  --text: #E2D2BE;
+  --text-muted: #A78A72;
+  --text-on-paper: var(--paper-ink);
+
+  /* --- Type ------------------------------------------------------------- */
+  /* Fraunces: a warm, wonky variable serif — carries the hand-lettered
+     spirit of the 2016 logo without imitating it. Instrument Sans: clean,
+     tabular numerals for a game that is fundamentally about a ledger.      */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Five sizes only. Discipline over range. */
+  --fs-xs: 0.75rem;    /* 12px — labels, counters             */
+  --fs-sm: 0.875rem;   /* 14px — secondary UI                 */
+  --fs-md: 1rem;       /* 16px — body, item names             */
+  --fs-lg: 1.5rem;     /* 24px — screen titles, prices        */
+  --fs-xl: 2.75rem;    /* 44px — display, verdict, currency   */
+
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.08em;
+  --tracking-caps: 0.16em;
+
+  /* --- Space (4pt grid) -------------------------------------------------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+
+  /* --- Radii — concentric rule: child radius = parent radius − padding --- */
+  --r-chip: 14px;
+  --r-card: 20px;
+  --r-panel: 28px;
+  --r-sheet: 36px;
+
+  /* --- Touch ------------------------------------------------------------- */
+  --touch-min: 44px;    /* Apple HIG floor. Non-negotiable, spec section 2. */
+
+  /* --- Elevation --------------------------------------------------------- */
+  --shadow-chip: 0 2px 8px rgba(10, 5, 2, 0.35);
+  --shadow-card: 0 8px 24px -6px rgba(10, 5, 2, 0.5);
+  --shadow-panel: 0 24px 64px -16px rgba(10, 5, 2, 0.7);
+  --shadow-lift: 0 12px 32px -8px rgba(245, 166, 35, 0.35);
+
+  /* --- Motion ------------------------------------------------------------
+     Durations lifted from the HOG reference research: find beat ~400ms,
+     panel entry 250ms, count-up 600ms, star pops staggered 150ms.          */
+  --dur-instant: 90ms;
+  --dur-quick: 150ms;
+  --dur-panel: 250ms;
+  --dur-find: 400ms;
+  --dur-count: 600ms;
+  --dur-reveal: 800ms;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);        /* the workhorse       */
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);   /* overshoot / pop     */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Frame -------------------------------------------------------------
+     Spec section 2: iPad 11" landscape is the primary frame.               */
+  --frame-w: 1210px;
+  --frame-h: 834px;
+  --frame-compact-w: 700px;
+}
+
+/* ============================================================================
+   Liquid Glass — iPadOS 26 control-layer material.
+   ONLY for: pause sheet, help sheet, map/meta chrome, modal backdrops.
+   NEVER over a hunt scene. Enforced by convention; see hunt.css.
+   ========================================================================== */
+.glass {
+  background: rgba(52, 32, 22, 0.42);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 226, 190, 0.16);
+  border-radius: var(--r-panel);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 240, 220, 0.22),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.25),
+    var(--shadow-panel);
+}
+
+.glass--light {
+  background: rgba(251, 245, 233, 0.16);
+  border-color: rgba(255, 245, 230, 0.34);
+}
+
+/* Opaque fallback. Apple's own guidance: glass is a material, not a
+   requirement — when the user opts out, give them honest solid chrome. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass--light {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--ink-700);
+    border-color: var(--ink-600);
+  }
+}
+
+/* ============================================================================
+   Reduced motion — spec section 8: replace sparkles, coin travel, critic
+   reveal and map unlock motion with static state changes.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 1ms;
+    --dur-quick: 1ms;
+    --dur-panel: 1ms;
+    --dur-find: 1ms;
+    --dur-count: 1ms;
+    --dur-reveal: 1ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>CookInQuest — prototype</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/shell.css" />
+  <link rel="stylesheet" href="css/screens.css" />
+  <link rel="stylesheet" href="css/hunt.css" />
+</head>
+<body>
+  <!-- ARIA live region — screen/overlay changes are announced here. -->
+  <div id="live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="stage">
+    <div id="frame" class="frame">
+      <div id="screen-root" class="screen-root"></div>
+      <div id="overlay-root" class="overlay-root" hidden></div>
+    </div>
+  </div>
+
+  <!-- Size-triggered "widen the window to play" panel — an overlay, not a route. -->
+  <div id="narrow-overlay" class="narrow-overlay" hidden>
+    <div class="narrow-overlay__panel">
+      <p class="narrow-overlay__title">Widen the window to play</p>
+      <p class="narrow-overlay__body">CookInQuest needs at least 480 x 640pt to stay playable. Resize or rotate to continue.</p>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/screens.js"></script>
+  <script src="js/sprites.js"></script>
+  <script src="js/hunt.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="CookInQuest untimed iPadOS player journey: story, four hidden-object levels, cooking, judgment, and progression.">
+<title>CookInQuest — Untimed Player Journey</title>
+<style>
+  :root { color-scheme: light; --page: #f7f3ea; --ink: #163936; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    padding: clamp(20px, 4vw, 56px);
+    background:
+      radial-gradient(circle at 8% 4%, rgba(255, 190, 83, .18), transparent 22rem),
+      radial-gradient(circle at 96% 16%, rgba(13, 150, 142, .14), transparent 26rem),
+      var(--page);
+    color: var(--ink);
+    font-family: "Avenir Next", Avenir, "Gill Sans", sans-serif;
+  }
+  h1, h2, h3, strong { font-family: "Avenir Next", Avenir, "Gill Sans", sans-serif; }
+  .share-note {
+    max-width: 1180px;
+    margin: 0 auto 14px;
+    padding: 10px 14px;
+    border: 1px solid #dfd5c5;
+    border-radius: 999px;
+    background: rgba(255,255,255,.78);
+    color: #536b67;
+    font-size: 12px;
+    letter-spacing: .04em;
+    backdrop-filter: blur(12px);
+  }
+  @media print {
+    body { padding: 0; background: white; }
+    .share-note, .options { display: none !important; }
+    .section, .course { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="share-note">SHAREABLE REVIEW · UNTIMED MOCKUP · PHASES 0–6</div>
+<style>
+  .cq-v2 { max-width: 1180px; margin: 0 auto; color: #163936; }
+  .cq-v2 * { box-sizing: border-box; }
+  .cq-v2 .hero { padding: 28px; border-radius: 24px; border: 1px solid #e7ddce; background: linear-gradient(135deg, #fff8e7, #ecf8f7); }
+  .cq-v2 .eyebrow { color: #087d76; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .cq-v2 .hero h2 { margin: 8px 0; }
+  .cq-v2 .hero p { max-width: 860px; color: #4c6662; }
+  .cq-v2 .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .cq-v2 .pill { padding: 6px 9px; border-radius: 999px; background: white; border: 1px solid #dcd5c8; font-size: 11px; font-weight: 800; }
+  .cq-v2 .pill.good { color: #087d76; border-color: #1fa0b3; }
+  .cq-v2 .pill.rule { color: #a45e00; border-color: #ee9c34; border-style: dashed; }
+  .cq-v2 .phase-strip { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: 8px; margin: 22px 0; overflow-x: auto; padding-bottom: 4px; }
+  .cq-v2 .phase { min-width: 120px; padding: 12px; border-top: 4px solid #087d76; border-radius: 12px; background: white; box-shadow: 0 4px 14px rgba(39,50,46,.08); }
+  .cq-v2 .phase small { display: block; color: #687e79; font-weight: 800; }
+  .cq-v2 .phase strong { display: block; margin-top: 4px; }
+  .cq-v2 .phase:nth-child(4) { border-color: #1fa0b3; }
+  .cq-v2 .phase:nth-child(5) { border-color: #e95bb1; }
+  .cq-v2 .phase:nth-child(6) { border-color: #8f7ce8; }
+  .cq-v2 .section { margin: 20px 0; padding: 22px; border-radius: 22px; background: white; border: 1px solid #e5ded3; box-shadow: 0 5px 18px rgba(39,50,46,.07); }
+  .cq-v2 .section h3 { margin-top: 0; }
+  .cq-v2 .flow { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: 8px; overflow-x: auto; padding: 3px 2px 8px; }
+  .cq-v2 .flow-card { position: relative; min-width: 120px; min-height: 164px; padding: 13px; border-radius: 14px; background: #edf7f4; border-left: 5px solid #087d76; }
+  .cq-v2 .flow-card:not(:last-child)::after { content: "→"; position: absolute; right: -12px; top: 47%; z-index: 3; color: #c66d00; font-weight: 900; }
+  .cq-v2 .flow-card strong { display: block; margin: 4px 0 6px; }
+  .cq-v2 .flow-card small { color: #087d76; font-weight: 900; text-transform: uppercase; }
+  .cq-v2 .flow-card p { margin: 0; color: #4d6762; font-size: 11px; line-height: 1.45; }
+  .cq-v2 .story { margin-top: 14px; padding: 15px 17px; border-radius: 14px; background: #fff2d3; border: 1px dashed #ee9c34; color: #57482f; }
+  .cq-v2 .intuitive { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin-top: 14px; }
+  .cq-v2 .intuitive div { padding: 12px; border-radius: 12px; background: #f4f0ff; border: 1px solid #d8cff8; font-size: 12px; }
+  .cq-v2 .course-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .cq-v2 .course { padding: 16px; border-radius: 16px; background: #f7fbfa; border: 1px solid #d9e9e5; }
+  .cq-v2 .course-head { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .cq-v2 .course-title small { display: block; color: #087d76; font-weight: 900; text-transform: uppercase; }
+  .cq-v2 .course-title strong { display: block; margin-top: 3px; }
+  .cq-v2 .course-budget { padding: 6px 8px; border-radius: 10px; background: #173b38; color: #ffcf66; font-size: 11px; font-weight: 900; white-space: nowrap; }
+  .cq-v2 .items { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; counter-reset: item; }
+  .cq-v2 .item { counter-increment: item; padding: 7px 8px; border-radius: 9px; background: white; border: 1px solid #dde8e5; font-size: 10px; line-height: 1.25; }
+  .cq-v2 .item::before { content: counter(item) ". "; color: #b96800; font-weight: 900; }
+  .cq-v2 .item.fact { background: #f4f0ff; border-color: #8f7ce8; }
+  .cq-v2 .course-loop { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 12px; }
+  .cq-v2 .node { padding: 6px 7px; border-radius: 8px; background: #e8f4f1; font-size: 10px; font-weight: 800; }
+  .cq-v2 .node.money { background: #fff0cf; border: 1px dashed #ee9c34; }
+  .cq-v2 .arr { color: #b96800; font-weight: 900; }
+  .cq-v2 .budget-rail { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 14px; padding: 12px; border-radius: 14px; background: #173b38; color: white; }
+  .cq-v2 .budget-rail strong { color: #ffcf66; margin-right: 5px; }
+  .cq-v2 .money-chip { padding: 6px 8px; border-radius: 999px; background: rgba(255,255,255,.11); font-size: 10px; }
+  .cq-v2 .money-chip.earn { border: 1px solid #63c7df; }
+  .cq-v2 .money-chip.spend { border: 1px solid #ffab59; }
+  .cq-v2 .end-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+  .cq-v2 .end-card { padding: 15px; border-radius: 14px; background: #edf7f4; border-top: 5px solid #1fa0b3; }
+  .cq-v2 .end-card:nth-child(2) { border-top-color: #e95bb1; }
+  .cq-v2 .end-card:nth-child(3) { border-top-color: #8f7ce8; }
+  .cq-v2 .end-card p { color: #4d6762; font-size: 12px; line-height: 1.45; }
+  .cq-v2 .system-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+  .cq-v2 .system { padding: 13px; border-radius: 13px; background: linear-gradient(135deg, #f3f6ff, #edfaf6); border: 1px solid #d2dced; }
+  .cq-v2 .system strong { display: block; margin-bottom: 5px; }
+  .cq-v2 .system p { margin: 0; color: #4d6762; font-size: 11px; line-height: 1.45; }
+  .cq-v2 .scope { margin-top: 14px; padding: 14px; border-radius: 13px; border: 2px solid #8e1b22; background: #fff5f1; color: #5a352e; }
+  .cq-v2 .options { margin-top: 18px; }
+  @media (max-width: 920px) {
+    .cq-v2 .course-grid, .cq-v2 .end-grid, .cq-v2 .system-grid, .cq-v2 .intuitive { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="cq-v2">
+  <div class="hero">
+    <div class="eyebrow">CookInQuest · 2026 iPad player journey</div>
+    <h2>Fun starts immediately: seven phases, four full levels, 60 real finds</h2>
+    <p>No mandatory tutorial, no placeholder objects, and no “complete the remaining courses” shortcut. The interface teaches itself through clear labels, visible state, and useful feedback during normal play.</p>
+    <div class="pill-row">
+      <span class="pill good">Zero tutorial screens</span>
+      <span class="pill good">15 named targets × 4 courses</span>
+      <span class="pill good">Every player step linked</span>
+      <span class="pill rule">New rules stay labeled as design decisions</span>
+    </div>
+  </div>
+
+  <div class="phase-strip">
+    <div class="phase"><small>Phase 0</small><strong>Entry</strong></div>
+    <div class="phase"><small>Phase 1</small><strong>Commit</strong></div>
+    <div class="phase"><small>Phase 2</small><strong>Choose</strong></div>
+    <div class="phase"><small>Phase 3 ×4</small><strong>Hunt + shop</strong></div>
+    <div class="phase"><small>Phase 4</small><strong>Cook</strong></div>
+    <div class="phase"><small>Phase 5</small><strong>Judgement</strong></div>
+    <div class="phase"><small>Phase 6</small><strong>Progress</strong></div>
+  </div>
+
+  <section class="section">
+    <h3>1 · The real story carries the first minute</h3>
+    <div class="flow">
+      <div class="flow-card"><small>Entry</small><strong>Title</strong><p>Play is unmistakably primary. Continue appears only when a save exists. Help remains optional.</p></div>
+      <div class="flow-card"><small>Commit</small><strong>Accept the challenge</strong><p>A concise mascot ribbon carries the real story directly onto Restaurant Row. There is no timer or mode-choice screen.</p></div>
+      <div class="flow-card"><small>Story</small><strong>Chef’s Challenge</strong><p>KhannaTown invites the player to gather fresh ingredients, manage a budget, cook four courses, and impress its toughest critic.</p></div>
+      <div class="flow-card"><small>Choose</small><strong>KhannaTown</strong><p>Taj Mahal is the only open restaurant. Six cuisines unlock in sequence; three slots say Coming Soon.</p></div>
+      <div class="flow-card"><small>Restaurant</small><strong>Taj Mahal</strong><p>The host introduces chai, pakoda, thaali, and gulab jamun, then grants one shared $100 budget.</p></div>
+      <div class="flow-card"><small>Course hub</small><strong>Choose Beverage</strong><p>Four large course cards show 0/15. Beverage is recommended but unfinished courses remain selectable.</p></div>
+      <div class="flow-card"><small>Play</small><strong>Find Milk</strong><p>The task is visible: “Find 15 ingredients.” Tap Milk → checkmark → 1/15 → a brief chai fact. The game is underway.</p></div>
+    </div>
+    <div class="story"><strong>Story promise:</strong> You were chosen for Restaurant Row’s Chef’s Challenge. Find what each dish needs, protect your money, buy the quality you can afford, cook with care, and earn the critic’s verdict.</div>
+    <div class="intuitive">
+      <div><strong>Self-evident hunt</strong><br>Named list + visible count + direct tapping.</div>
+      <div><strong>Self-evident economy</strong><br>Hint $20 and Miss −$2 shown beside the wallet.</div>
+      <div><strong>Self-evident shop</strong><br>Quality, price, affordability, and balance-after-purchase.</div>
+      <div><strong>Self-evident cooking</strong><br>Ingredient → labeled appliance → Heating / Ready / Overcooking.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3>2 · Four complete hidden-object levels</h3>
+    <p class="subtitle">Purple items receive short educational facts. All other correct taps use fast, nonblocking confirmation.</p>
+    <div class="course-grid">
+      <article class="course">
+        <div class="course-head"><div class="course-title"><small>Level 1 · Grocery</small><strong>Beverage · Chai tea</strong></div><span class="course-budget">$100 → $70</span></div>
+        <div class="items">
+          <span class="item fact">Milk</span><span class="item">Sugar</span><span class="item fact">Black Tea Leaves</span>
+          <span class="item fact">Fresh Ginger</span><span class="item fact">Green Cardamom Pods</span><span class="item">Cinnamon Sticks</span>
+          <span class="item">Whole Cloves</span><span class="item">Black Peppercorns</span><span class="item">Fennel Seeds</span>
+          <span class="item">Star Anise</span><span class="item">Nutmeg</span><span class="item fact">Tulsi Leaves</span>
+          <span class="item">Saffron Threads</span><span class="item">Honey Jar</span><span class="item">Tea Strainer</span>
+        </div>
+        <div class="course-loop"><span class="node">Find 15</span><span class="arr">→</span><span class="node money">Find bonus +$15</span><span class="arr">→</span><span class="node">Tea tiers</span><span class="arr">→</span><span class="node money">Buy Red Label −$45</span><span class="arr">→</span><span class="node">Hub 15/60</span></div>
+      </article>
+
+      <article class="course">
+        <div class="course-head"><div class="course-title"><small>Level 2 · Produce market</small><strong>Appetizer · Pakoda</strong></div><span class="course-budget">$70 → $50</span></div>
+        <div class="items">
+          <span class="item">Cooking Oil</span><span class="item fact">Bell Peppers</span><span class="item fact">Gram Flour (Besan)</span>
+          <span class="item">Potato</span><span class="item">Red Onion</span><span class="item">Spinach</span>
+          <span class="item">Eggplant</span><span class="item">Cauliflower</span><span class="item fact">Green Chilies</span>
+          <span class="item fact">Fresh Coriander</span><span class="item">Ginger</span><span class="item">Garlic</span>
+          <span class="item fact">Turmeric Tin</span><span class="item">Cumin Seeds</span><span class="item">Salt Shaker</span>
+        </div>
+        <div class="course-loop"><span class="node">Find 15</span><span class="arr">→</span><span class="node money">Find bonus +$15</span><span class="arr">→</span><span class="node">Gram flour tiers</span><span class="arr">→</span><span class="node money">Buy Fresh Ground −$35</span><span class="arr">→</span><span class="node">Hub 30/60</span></div>
+      </article>
+
+      <article class="course">
+        <div class="course-head"><div class="course-title"><small>Level 3 · Dinner table</small><strong>Entrée · Thaali</strong></div><span class="course-budget">$50 → $25</span></div>
+        <div class="items">
+          <span class="item fact">Spices (Spice Box)</span><span class="item fact">Vegetables (Basket)</span><span class="item fact">Basmati Rice</span>
+          <span class="item fact">Wheat Flour</span><span class="item fact">Lentils</span><span class="item">Chickpeas</span>
+          <span class="item">Potato</span><span class="item">Tomato</span><span class="item">Onion</span>
+          <span class="item">Spinach</span><span class="item">Cauliflower</span><span class="item">Carrot</span>
+          <span class="item">Green Peas</span><span class="item">Yogurt Bowl</span><span class="item">Ghee Jar</span>
+        </div>
+        <div class="course-loop"><span class="node">Find 15</span><span class="arr">→</span><span class="node money">Find bonus +$15</span><span class="arr">→</span><span class="node">Rice + wheat tiers</span><span class="arr">→</span><span class="node money">Buy Tilda −$40</span><span class="arr">→</span><span class="node">Hub 45/60</span></div>
+      </article>
+
+      <article class="course">
+        <div class="course-head"><div class="course-title"><small>Level 4 · Bakery</small><strong>Dessert · Gulab Jamun</strong></div><span class="course-budget">$25 → $18</span></div>
+        <div class="items">
+          <span class="item fact">Rose Water</span><span class="item fact">Semolina</span><span class="item fact">Milk Powder</span>
+          <span class="item">All-Purpose Flour</span><span class="item">Baking Powder</span><span class="item">Sugar</span>
+          <span class="item">Ghee</span><span class="item">Green Cardamom Pods</span><span class="item fact">Saffron Threads</span>
+          <span class="item">Pistachios</span><span class="item">Almonds</span><span class="item">Dried Rose Petals</span>
+          <span class="item">Sugar Syrup Jug</span><span class="item fact">Khoya (Milk Solids)</span><span class="item">Lemon</span>
+        </div>
+        <div class="course-loop"><span class="node">Find 15</span><span class="arr">→</span><span class="node money">Find bonus +$15</span><span class="arr">→</span><span class="node">Semolina tiers</span><span class="arr">→</span><span class="node money">Buy Roasted Fine −$22</span><span class="arr">→</span><span class="node">Hub 60/60</span></div>
+      </article>
+    </div>
+
+    <div class="budget-rail"><strong>One untimed restaurant wallet</strong><span class="money-chip">$100</span><span>→</span><span class="money-chip earn">+$15</span><span>→</span><span class="money-chip spend">−$45 = $70</span><span>→</span><span class="money-chip earn">+$15</span><span>→</span><span class="money-chip spend">−$35 = $50</span><span>→</span><span class="money-chip earn">+$15</span><span>→</span><span class="money-chip spend">−$40 = $25</span><span>→</span><span class="money-chip earn">+$15</span><span>→</span><span class="money-chip spend">−$22 = $18</span></div>
+  </section>
+
+  <section class="section">
+    <h3>3 · Complete payoff: cook, judgement, progress</h3>
+    <div class="end-grid">
+      <div class="end-card"><strong>Phase 4 · Cook</strong><p>Group every collected ingredient, load the five labeled appliances, and use drag or tap-select/tap-place. Each station moves through Heating → Ready → Overcooking. All five must resolve before the chai and thaali assemble.</p></div>
+      <div class="end-card"><strong>Phase 5 · Judgement</strong><p>The critic scores Ingredient Quality /12 and Cooking /10. The total out of 22 creates 1–5 stars and a short review that explains what helped or hurt the result.</p></div>
+      <div class="end-card"><strong>Phase 6 · Progress</strong><p>The next restaurant visibly unlocks on the map, receives a fresh $100 budget, and becomes playable. Taj Mahal remains available to replay for a better rating.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h3>4 · iPadOS 26 layer</h3>
+    <div class="system-grid">
+      <div class="system"><strong>Content first</strong><p>Full-bleed scenes stay dominant. The course list collapses into a readable drawer when the iPad window narrows.</p></div>
+      <div class="system"><strong>Glass only for controls</strong><p>Pause, Help, and compact status controls can float in restrained Liquid Glass. Lists, prices, story, and gauges remain opaque.</p></div>
+      <div class="system"><strong>Every input works</strong><p>Touch, Pencil, pointer, keyboard, VoiceOver, and Switch Control can complete the same full journey. Dragging is never required.</p></div>
+      <div class="system"><strong>States explain themselves</strong><p>44×44 pt controls, text progress, checkmarked selections, labeled gauge zones, visible budget arithmetic, and no color-only meaning.</p></div>
+    </div>
+    <div class="scope"><strong>No-shortcut commitment:</strong> the Figma mockup links all 60 item finds, four completion summaries, four shopping ladders, four purchase confirmations, four hub-return states, five cooking stations, the score breakdown, and the restaurant unlock. Components and variables reduce authoring cost, but the player never skips a level.</div>
+  </section>
+
+  <div class="options">
+    <div class="option" data-choice="approve-v2" onclick="toggleSelect(this)"><div class="letter">✓</div><div class="content"><h3>Approve this complete journey</h3><p>Use it as the source for the Figma Make specification.</p></div></div>
+    <div class="option" data-choice="revise-v2" onclick="toggleSelect(this)"><div class="letter">↺</div><div class="content"><h3>Revise the journey</h3><p>I’ll describe the changes in the terminal.</p></div></div>
+  </div>
+</div>
+
+<script>
+  function toggleSelect(element) {
+    document.querySelectorAll('.option').forEach((item) => item.classList.remove('selected'));
+    element.classList.add('selected');
+  }
+</script>
+</body>
+</html>

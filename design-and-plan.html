@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CookInQuest 2026 · Design & Build Plan</title>
+<style>
+:root{--ink:#282026;--maroon:#7d1f20;--paprika:#e9542d;--saffron:#f7b62c;--turmeric:#ffd85a;--teal:#087cae;--blue:#129bd0;--cream:#fff8e4;--paper:#f6e6bd;--line:#d6b978;--green:#2e6b3d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#173d4e;color:var(--ink);font-family:"Avenir Next",Avenir,"Trebuchet MS",sans-serif}
+.page{min-height:100vh;background-color:var(--cream);background-image:radial-gradient(circle at 1px 1px,rgba(125,31,32,.09) 1px,transparent 0);background-size:22px 22px}
+.hero{position:relative;overflow:hidden;padding:48px clamp(24px,6vw,88px) 42px;background:var(--saffron);border-bottom:8px solid var(--ink)}
+.hero:after{content:"";position:absolute;right:-70px;top:-95px;width:330px;height:330px;border:42px solid var(--paprika);border-radius:50%;opacity:.22}
+.kicker{display:inline-block;padding:7px 13px;background:var(--teal);color:white;border:3px solid var(--ink);box-shadow:4px 5px 0 var(--ink);font-weight:900;letter-spacing:.09em;text-transform:uppercase;transform:rotate(-1deg)}
+.hero h1{max-width:900px;margin:22px 0 10px;font-family:"Chalkboard SE","Marker Felt",cursive;font-size:clamp(2.4rem,5.6vw,5.4rem);line-height:.92;letter-spacing:-.035em}
+.hero p{max-width:760px;margin:0;font-size:clamp(1rem,1.8vw,1.3rem);font-weight:650}
+.toolbar{position:sticky;z-index:20;top:0;display:flex;gap:10px;align-items:center;padding:12px clamp(16px,4vw,56px);background:#fff8e4f2;border-bottom:3px solid var(--ink);box-shadow:0 5px 0 rgba(40,32,38,.15)}
+.toolbar button{min-height:44px;padding:9px 16px;border:3px solid var(--ink);border-radius:999px;background:white;color:var(--ink);font:800 .9rem inherit;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.toolbar button[aria-selected="true"]{background:var(--teal);color:white;transform:translateY(-2px)}
+.toolbar .spacer{flex:1}.toolbar .print{background:var(--turmeric)}
+main{width:min(1180px,94vw);margin:0 auto;padding:38px 0 96px}
+.panel{display:none}.panel.active{display:grid;grid-template-columns:minmax(0,1fr);animation:arrive .28s ease-out both}
+.doc{padding:clamp(22px,4vw,56px);background:#fffdf5;border:4px solid var(--ink);box-shadow:12px 14px 0 var(--maroon);border-radius:18px 30px 16px 28px}
+.doc h1{margin-top:0;color:var(--maroon);font-family:"Chalkboard SE","Marker Felt",cursive;font-size:clamp(2rem,4vw,3.5rem);line-height:1}
+.doc h2{margin:2.2em 0 .7em;padding-bottom:.35em;border-bottom:4px solid var(--saffron);color:var(--teal);font-size:clamp(1.5rem,2.6vw,2.15rem)}
+.doc h3{margin:1.8em 0 .5em;color:var(--maroon);font-size:1.28rem}.doc h4{color:var(--green)}
+.doc p,.doc li{font-size:1rem;line-height:1.65}.doc li+li{margin-top:.34em}.doc strong{color:var(--maroon)}
+.doc code{padding:.12em .38em;background:#efe0b7;border:1px solid #c7a966;border-radius:5px;font-family:"SFMono-Regular",Consolas,monospace;font-size:.88em}
+.doc pre{overflow:auto;padding:18px;background:var(--ink);color:#fff5d6;border-left:7px solid var(--paprika);border-radius:10px;box-shadow:5px 6px 0 #b89454}
+.doc pre code{padding:0;background:none;border:0;color:inherit}.doc blockquote{margin:18px 0;padding:14px 18px;background:#e5f5f7;border-left:7px solid var(--teal);font-weight:700}
+.table-wrap{overflow:auto;border:3px solid var(--ink);border-radius:12px}table{width:100%;border-collapse:collapse;background:white}th{background:var(--teal);color:white;text-align:left}th,td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+.check{display:inline-grid;place-items:center;width:1.15em;height:1.15em;margin-right:.55em;border:2px solid var(--maroon);border-radius:3px;color:white;font-size:.75em}.check.done{background:var(--green)}
+hr{margin:36px 0;border:0;border-top:5px dotted var(--line)}a{color:var(--teal);font-weight:750}.note{margin-top:30px;padding:14px 18px;background:var(--paper);border:3px solid var(--ink);border-radius:8px;font-weight:700}
+@keyframes arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:700px){.hero{padding-top:30px}.toolbar{overflow:auto}.toolbar .spacer,.toolbar .print{display:none}.doc{padding:22px;border-width:3px;box-shadow:7px 8px 0 var(--maroon)}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media print{.toolbar{display:none}.page{background:white}.hero{padding:22px;border-bottom:2px solid #000}.panel{display:block!important}.doc{margin:20px 0;border:1px solid #555;box-shadow:none}.doc h2{break-after:avoid}.doc pre,.table-wrap{break-inside:avoid}}
+.showcase{margin-bottom:36px}.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.swatch{padding:10px;background:white;border:3px solid var(--ink);border-radius:11px;box-shadow:3px 4px 0 var(--line)}.swatch span{display:block;height:68px;margin-bottom:8px;background:var(--swatch);border:2px solid var(--ink);border-radius:7px}.swatch strong,.swatch code{display:block}.swatch code{margin-top:3px;padding:0;background:none;border:0}.asset-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}.asset-grid figure{margin:0;background:var(--paper);border:3px solid var(--ink);border-radius:12px;overflow:hidden;box-shadow:5px 6px 0 var(--maroon)}.asset-grid figure>div{display:grid;place-items:center;height:170px;padding:16px;background:var(--sky)}.asset-grid img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(5px 7px 0 rgba(37,34,40,.48))}.asset-grid figcaption{padding:12px;font-weight:850}.asset-grid figcaption code{display:block;margin-top:6px;font-size:.72rem;overflow-wrap:anywhere}
+</style>
+</head>
+<body><div class="page">
+<header class="hero"><span class="kicker">iPadOS · Landscape · 2026</span><h1>CookInQuest<br>Design & Build Plan</h1><p>The approved Option 1 onboarding, its fluid handoff into Option 2, and the route toward Restaurant Row.</p></header>
+<nav class="toolbar" aria-label="Document sections">
+<button type="button" data-tab="design" aria-selected="true">Design brief</button>
+<button type="button" data-tab="plan" aria-selected="false">Implementation plan</button>
+<button type="button" data-tab="system" aria-selected="false">Design system</button>
+<span class="spacer"></span><button type="button" class="print" onclick="print()">Print / Save PDF</button>
+</nav>
+<main>
+<section class="panel active" data-panel="design"><article class="doc"><h1 id="cookinquest-ipad-game-redesign-2026">CookInQuest iPad Game Redesign — 2026</h1>
+<h2 id="goal">Goal</h2>
+<p>Build a polished, playful CookInQuest onboarding experience as a simple local HTML game for iPadOS in horizontal orientation.</p>
+<p>The experience moves through three approved visual stages:</p>
+<ol>
+<li>The Hidden Invitation — onboarding and player entry.</li>
+<li>Choose Your Chef Kit — player identity selection.</li>
+<li>Restaurant Row — the game hub and first quest.</li>
+</ol>
+<p>For now, implementation focuses only on Stage 1 and its transition into Stage 2.</p>
+<h2 id="platform">Platform</h2>
+<ul>
+<li>Format: HTML, CSS, and vanilla JavaScript.</li>
+<li>Primary canvas: 1210 × 834 landscape.</li>
+<li>Secondary landscape support: 700 × 834 compact layout.</li>
+<li>Input: touch first, with Apple Pencil, pointer, and keyboard support.</li>
+<li>Orientation: horizontal by default.</li>
+<li>Do not show a “rotate your iPad” screen or message.</li>
+<li>No timer during onboarding.</li>
+<li>No account gate before the player can interact.</li>
+</ul>
+<h2 id="visual-source-of-truth">Visual Source of Truth</h2>
+<h3 id="stage-1-the-hidden-invitation">Stage 1 — The Hidden Invitation</h3>
+<p>Reference: <code>/var/folders/ym/hv8p7pys27x0p25gjf85wp6m0000gn/T/codex-clipboard-58a91688-578c-44b7-b200-67016c211169.png</code></p>
+<p>Required visual elements:</p>
+<ul>
+<li>Khanna Town market scene.</li>
+<li>CookInQuest logo.</li>
+<li>“The Hidden Invitation” title.</li>
+<li>Chef mascot pointing toward the challenge.</li>
+<li>Sealed Chef’s Challenge invitation.</li>
+<li>Torn-paper objective strip.</li>
+<li>Open RSVP envelope with three postage-stamp choices:</li>
+<li>Play as Guest.</li>
+<li>Returning Chef.</li>
+<li>New Chef.</li>
+</ul>
+<p>This screen establishes the final art direction: colorful Indian market, hand-painted paper, bold sticker outlines, playful chef character, and diegetic controls built into physical objects.</p>
+<h3 id="stage-2-choose-your-chef-kit">Stage 2 — Choose Your Chef Kit</h3>
+<p>Reference: <code>/var/folders/ym/hv8p7pys27x0p25gjf85wp6m0000gn/T/codex-clipboard-66a73e39-9736-4395-bf53-0819850c02ff.png</code></p>
+<p>Player choices:</p>
+<ul>
+<li>Guest Apron.</li>
+<li>Recipe Book.</li>
+<li>Chef Hat.</li>
+</ul>
+<p>This stage is the identity-selection step. It should feel like the invitation has brought the player inside the kitchen rather than loading an unrelated menu.</p>
+<h3 id="stage-3-restaurant-row">Stage 3 — Restaurant Row</h3>
+<p>Reference: <code>/var/folders/ym/hv8p7pys27x0p25gjf85wp6m0000gn/T/codex-clipboard-d2c0d60f-0439-45a9-b129-a14c88b5a47c.png</code></p>
+<p>Purpose:</p>
+<ul>
+<li>Show the player’s chosen identity.</li>
+<li>Introduce the Restaurant Row hub.</li>
+<li>Highlight Taj Mahal as the first available restaurant.</li>
+<li>Keep other restaurants visibly locked.</li>
+<li>Offer login or account creation only as an optional way to save progress.</li>
+</ul>
+<p>Stage 3 is documented now but will be implemented after Stage 1 and Stage 2 are approved.</p>
+<h2 id="stage-1-onboarding-flow">Stage 1 Onboarding Flow</h2>
+<h3 id="1-search">1. Search</h3>
+<ul>
+<li>Show the complete Option 1 market composition.</li>
+<li>Objective reads “Find your invitation · 0/1.”</li>
+<li>The sealed Chef’s Challenge invitation is the only required interaction.</li>
+<li>Guest, Returning Chef, and New Chef stamps are visible but inactive until the invitation is found.</li>
+</ul>
+<h3 id="2-invitation-found">2. Invitation Found</h3>
+<ul>
+<li>The tapped envelope compresses briefly, lifts, and settles.</li>
+<li>Objective updates to “1/1.”</li>
+<li>The chef celebrates without blocking the player.</li>
+<li>The same invitation remains visible throughout the transition.</li>
+<li>Do not replace the entire scene in one frame.</li>
+</ul>
+<h3 id="3-rsvp-reveal">3. RSVP Reveal</h3>
+<ul>
+<li>The wax seal reacts and the already-visible RSVP envelope lifts slightly.</li>
+<li>The three inactive stamps rise from their existing positions with a short stagger:</li>
+</ul>
+<ol>
+<li>Play as Guest.</li>
+<li>Returning Chef.</li>
+<li>New Chef.</li>
+</ol>
+<ul>
+<li>The first stamp becomes focused after the reveal.</li>
+<li>The objective changes to “Choose your way in.”</li>
+</ul>
+<h3 id="4-player-entry">4. Player Entry</h3>
+<ul>
+<li>Play as Guest continues immediately to Stage 2.</li>
+<li>Returning Chef opens the saved local chef list.</li>
+<li>New Chef opens a simple local profile form.</li>
+<li>Account creation is optional and never blocks guest play.</li>
+</ul>
+<h2 id="transition-timing">Transition Timing</h2>
+<p>The complete invitation interaction should take about 900 ms:</p>
+<ul>
+<li>0–80 ms: touch compression.</li>
+<li>80–180 ms: objective changes to 1/1 and mascot reacts.</li>
+<li>160–420 ms: invitation lifts and settles.</li>
+<li>340–640 ms: RSVP envelope opens.</li>
+<li>560–820 ms: three stamps rise with a 60 ms stagger.</li>
+<li>820–900 ms: controls become active and focus moves to Play as Guest.</li>
+</ul>
+<p>Reduced motion uses a short opacity transition with no zoom, rotation, parallax, or stagger.</p>
+<h2 id="transition-to-stage-2">Transition to Stage 2</h2>
+<p>The selected stamp is the visual bridge:</p>
+<ul>
+<li>Play as Guest continues directly to the chef-kit screen.</li>
+<li>Returning Chef chooses a saved local profile, then continues to the chef-kit screen.</li>
+<li>New Chef creates a local profile, then continues to the chef-kit screen.</li>
+<li>The selected entry stamp travels into the kitchen transition, but the player still chooses independently between Guest Apron, Recipe Book, and Chef Hat.</li>
+<li>The market scene softens while the kitchen scene appears underneath.</li>
+<li>The selected object stays visible during the transition so the player understands cause and effect.</li>
+<li>Target duration: 700–900 ms.</li>
+</ul>
+<h2 id="transition-to-stage-3">Transition to Stage 3</h2>
+<p>After the chef kit is selected:</p>
+<ul>
+<li>The chosen kit receives a short confirmation animation.</li>
+<li>The kitchen pulls back into the Khanna Town map.</li>
+<li>Restaurant Row appears with Taj Mahal highlighted.</li>
+<li>The chef points toward the first available table.</li>
+<li>Optional login and account creation appear only as progress-saving actions.</li>
+</ul>
+<h2 id="interaction-rules">Interaction Rules</h2>
+<ul>
+<li>All important touch targets are at least 44 × 44 points.</li>
+<li>Every visible control has a semantic HTML button.</li>
+<li>Touch, pointer, keyboard, and Apple Pencil use the same actions.</li>
+<li>Controls have visible press, focus, selected, disabled, and success states.</li>
+<li>Motion communicates state changes; it is not decorative.</li>
+<li>No hover-only instructions.</li>
+<li>No penalties, timers, offers, or rating prompts during onboarding.</li>
+<li>Audio and haptics are optional enhancements and must respect mute and reduced-motion preferences.</li>
+</ul>
+<h2 id="technical-structure">Technical Structure</h2>
+<p>Use one state-driven HTML experience rather than separate disconnected pages.</p>
+<p>Suggested states:</p>
+<pre><code class="language-text">SEARCHING
+INVITATION_FOUND
+IDENTITY_CHOICE
+RETURNING_CHEF
+NEW_CHEF
+CHEF_KIT
+RESTAURANT_ROW</code></pre>
+<p>Stage 1 uses the same DOM scene during Search, Invitation Found, and Identity Choice. Elements animate between states; they are not replaced with an abrupt full-screen swap.</p>
+<p>Core files:</p>
+<pre><code class="language-text">index.html
+styles.css
+js/main.mjs
+js/onboarding-state.mjs
+js/onboarding-view.mjs
+assets/</code></pre>
+<h2 id="stage-1-acceptance-criteria">Stage 1 Acceptance Criteria</h2>
+<ul>
+<li>Opens directly in landscape onboarding with no rotation message.</li>
+<li>Matches the approved Option 1 composition.</li>
+<li>The invitation is clearly discoverable and tappable.</li>
+<li>Tapping the invitation creates one continuous 900 ms reveal.</li>
+<li>No abrupt full-screen replacement occurs.</li>
+<li>The objective progresses from 0/1 to 1/1, then to “Choose your way in.”</li>
+<li>Guest, Returning Chef, and New Chef become active only after the reveal.</li>
+<li>All three entry paths work.</li>
+<li>Reduced motion works.</li>
+<li>No browser console errors.</li>
+<li>Verified at 1210 × 834 and compact landscape size.</li>
+</ul>
+<h2 id="build-order">Build Order</h2>
+<ol>
+<li>Rebuild Stage 1 as one continuous Option 1 scene.</li>
+<li>Verify interaction, motion, accessibility, and landscape layouts.</li>
+<li>Build the transition into Stage 2.</li>
+<li>Build Stage 2 chef-kit selection.</li>
+<li>Build the transition into Stage 3.</li>
+<li>Build Restaurant Row and the first Taj Mahal quest.</li>
+</ol><p class="note">Source: design.md</p></article></section>
+<section class="panel" data-panel="plan"><article class="doc"><h1 id="cookinquest-option-1-onboarding-implementation-plan">CookInQuest Option 1 Onboarding Implementation Plan</h1>
+<blockquote><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</blockquote>
+<p><strong>Goal:</strong> Rebuild the approved Option 1 onboarding as one continuous landscape scene and transition cleanly into the approved Option 2 chef-kit screen.</p>
+<p><strong>Architecture:</strong> Keep the existing vanilla HTML state machine, but make <code>INVITATION_FOUND</code> a real transition state. Option 1 remains mounted throughout search, reveal, and player entry; live semantic hotspots and state text sit over the approved art. A small timing module owns the 900 ms reveal contract, and a separate chef-kit view owns the transition into Option 2.</p>
+<p><strong>Tech Stack:</strong> HTML, CSS, vanilla JavaScript modules, Node test runner, Sharp for image optimization, Astro static build, in-app browser for visual QA.</p>
+<hr>
+<h2 id="file-map">File Map</h2>
+<ul>
+<li>Modify <code>public/work/cookinquest/game/index.html</code> — keep one Option 1 scene and add the Option 2 chef-kit scene.</li>
+<li>Modify <code>public/work/cookinquest/game/styles.css</code> — add the invitation reveal and screen-to-screen motion.</li>
+<li>Modify <code>public/work/cookinquest/game/js/constants.mjs</code> — add <code>CHEF_KIT</code> mode and stage actions.</li>
+<li>Modify <code>public/work/cookinquest/game/js/onboarding-state.mjs</code> — make transitions strict and add the Stage 2 handoff.</li>
+<li>Modify <code>public/work/cookinquest/game/js/onboarding-view.mjs</code> — render busy, inert, disabled, and active states.</li>
+<li>Modify <code>public/work/cookinquest/game/js/main.mjs</code> — coordinate the 900 ms reveal and selected-stamp handoff.</li>
+<li>Create <code>public/work/cookinquest/game/js/onboarding-timing.mjs</code> — single source for reveal and reduced-motion timing.</li>
+<li>Create <code>public/work/cookinquest/game/assets/chef-kit-screen.webp</code> — optimized approved Option 2 reference.</li>
+<li>Modify tests under <code>tests/cookinquest/</code> — reducer, timing, view, shell, asset, and integration contracts.</li>
+<li>Update <code>design-qa.md</code> and <code>docs/qa/</code> — same-state reference comparisons and flow evidence.</li>
+</ul>
+<h3 id="task-1-lock-the-state-and-timing-contracts">Task 1: Lock the state and timing contracts</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>public/work/cookinquest/game/js/onboarding-timing.mjs</code></li>
+<li>Modify: <code>public/work/cookinquest/game/js/constants.mjs</code></li>
+<li>Modify: <code>public/work/cookinquest/game/js/onboarding-state.mjs</code></li>
+<li>Create: <code>tests/cookinquest/onboarding-timing.test.mjs</code></li>
+<li>Modify: <code>tests/cookinquest/onboarding-state.test.mjs</code></li>
+</ul>
+<ul>
+<li><span class="check "></span><strong>Step 1: Write the failing timing test</strong></li>
+</ul>
+<pre><code class="language-js">import assert from 'node:assert/strict';
+import test from 'node:test';
+import {
+  REVEAL_TIMING,
+  getRevealDelay,
+} from '../../public/work/cookinquest/game/js/onboarding-timing.mjs';
+
+test('invitation reveal uses one 900ms contract with an immediate reduced-motion path', () =&gt; {
+  assert.deepEqual(REVEAL_TIMING, {
+    press: 80,
+    objective: 180,
+    invitation: 420,
+    stampsStart: 560,
+    stampsEnd: 820,
+    complete: 900,
+  });
+  assert.equal(getRevealDelay({ reducedMotion: false }), 900);
+  assert.equal(getRevealDelay({ reducedMotion: true }), 0);
+});</code></pre>
+<ul>
+<li><span class="check "></span><strong>Step 2: Extend reducer tests before changing production code</strong></li>
+</ul>
+<p>Add table-driven assertions that <code>SEARCHING</code> and <code>INVITATION_FOUND</code> return the identical state object for <code>OPEN_RETURNING</code>, <code>OPEN_NEW</code>, <code>COMPLETE</code>, and <code>ENTER_CHEF_KIT</code>. Add the valid edge:</p>
+<pre><code class="language-text">IDENTITY + ENTER_CHEF_KIT -&gt; CHEF_KIT</code></pre>
+<ul>
+<li><span class="check "></span><strong>Step 3: Run the focused tests and confirm RED</strong></li>
+</ul>
+<p>Run:</p>
+<pre><code class="language-bash">node --test tests/cookinquest/onboarding-timing.test.mjs tests/cookinquest/onboarding-state.test.mjs</code></pre>
+<p>Expected: missing timing module, missing <code>CHEF_KIT</code>, and invalid transition assertions fail.</p>
+<ul>
+<li><span class="check "></span><strong>Step 4: Add the minimal timing module and strict transitions</strong></li>
+</ul>
+<pre><code class="language-js">export const REVEAL_TIMING = Object.freeze({
+  press: 80,
+  objective: 180,
+  invitation: 420,
+  stampsStart: 560,
+  stampsEnd: 820,
+  complete: 900,
+});
+
+export function getRevealDelay({ reducedMotion }) {
+  return reducedMotion ? 0 : REVEAL_TIMING.complete;
+}</code></pre>
+<p>Add <code>CHEF_KIT: 'chefKit'</code> and <code>ENTER_CHEF_KIT: 'ENTER_CHEF_KIT'</code>. Only Identity or successful profile completion may enter Chef Kit.</p>
+<ul>
+<li><span class="check "></span><strong>Step 5: Run tests and commit</strong></li>
+</ul>
+<pre><code class="language-bash">npm run test:game
+git add public/work/cookinquest/game/js tests/cookinquest
+git commit -m "feat: define CookInQuest reveal timing"</code></pre>
+<p>Expected: all game tests pass.</p>
+<h3 id="task-2-make-option-1-one-continuous-interactive-scene">Task 2: Make Option 1 one continuous interactive scene</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>public/work/cookinquest/game/index.html</code></li>
+<li>Modify: <code>public/work/cookinquest/game/js/onboarding-view.mjs</code></li>
+<li>Modify: <code>tests/cookinquest/entry-shell.test.mjs</code></li>
+<li>Modify: <code>tests/cookinquest/onboarding-view.test.mjs</code></li>
+</ul>
+<ul>
+<li><span class="check "></span><strong>Step 1: Write failing view tests</strong></li>
+</ul>
+<p>Require these view results:</p>
+<pre><code class="language-js">assert.deepEqual(getOnboardingView(foundState), {
+  objective: '1/1',
+  objectiveLabel: 'Invitation found',
+  showInvitation: true,
+  showEntryChoices: true,
+  entryInteractive: false,
+  busy: true,
+  announcement: 'Invitation found.',
+});
+
+assert.deepEqual(getOnboardingView(identityState), {
+  objective: '1/1',
+  objectiveLabel: 'Choose your way in',
+  showInvitation: true,
+  showEntryChoices: true,
+  entryInteractive: true,
+  busy: false,
+  announcement: 'Invitation opened. Choose how to enter the challenge.',
+});</code></pre>
+<p>Also assert that FOUND makes the entry group inert, <code>aria-hidden="true"</code>, and disables all three stamps; IDENTITY removes those locks.</p>
+<ul>
+<li><span class="check "></span><strong>Step 2: Write the failing shell contract</strong></li>
+</ul>
+<p>Require one always-mounted <code>data-option1-scene</code>, one sealed invitation hotspot, one live objective overlay, and three semantic stamp buttons. Reject duplicate legacy invitation/open-envelope image layers.</p>
+<ul>
+<li><span class="check "></span><strong>Step 3: Run focused tests and confirm RED</strong></li>
+</ul>
+<pre><code class="language-bash">node --test tests/cookinquest/entry-shell.test.mjs tests/cookinquest/onboarding-view.test.mjs</code></pre>
+<p>Expected: missing view fields, missing Option 1 scene markers, and incorrect interactivity fail.</p>
+<ul>
+<li><span class="check "></span><strong>Step 4: Simplify the HTML</strong></li>
+</ul>
+<p>Use this structure:</p>
+<pre><code class="language-html">&lt;section data-option1-scene aria-labelledby="option1-objective"&gt;
+  &lt;img src="./assets/option1-entry-screen.webp" alt="" decoding="async"&gt;
+  &lt;button data-invitation-target aria-label="Open the Chef's Challenge invitation"&gt;&lt;/button&gt;
+  &lt;p data-live-objective&gt;&lt;span data-objective-label&gt;Find your invitation&lt;/span&gt; &lt;strong data-objective-count&gt;0/1&lt;/strong&gt;&lt;/p&gt;
+  &lt;div data-entry-choices aria-label="Choose your way in" inert aria-hidden="true"&gt;
+    &lt;button data-action="guest" disabled&gt;&lt;span&gt;Play as Guest&lt;/span&gt;&lt;/button&gt;
+    &lt;button data-action="returning" disabled&gt;&lt;span&gt;Returning Chef&lt;/span&gt;&lt;/button&gt;
+    &lt;button data-action="new" disabled&gt;&lt;span&gt;New Chef&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+<p>The approved composite stays visible from the first frame. Live overlays change state without replacing the scene.</p>
+<ul>
+<li><span class="check "></span><strong>Step 5: Implement renderer locks and announcements</strong></li>
+</ul>
+<p>Set <code>root.ariaBusy</code>, invitation disabled state, entry group inert/aria-hidden, button disabled states, and objective copy exclusively from <code>getOnboardingView</code>.</p>
+<ul>
+<li><span class="check "></span><strong>Step 6: Run tests and commit</strong></li>
+</ul>
+<pre><code class="language-bash">npm run test:game
+git add public/work/cookinquest/game/index.html public/work/cookinquest/game/js/onboarding-view.mjs tests/cookinquest
+git commit -m "refactor: keep Option 1 onboarding in one scene"</code></pre>
+<p>Expected: all game tests pass.</p>
+<h3 id="task-3-animate-the-invitation-reveal-without-a-screen-swap">Task 3: Animate the invitation reveal without a screen swap</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>public/work/cookinquest/game/styles.css</code></li>
+<li>Modify: <code>public/work/cookinquest/game/js/main.mjs</code></li>
+<li>Modify: <code>tests/cookinquest/entry-shell.test.mjs</code></li>
+<li>Modify: <code>tests/cookinquest/onboarding-state.test.mjs</code></li>
+</ul>
+<ul>
+<li><span class="check "></span><strong>Step 1: Write failing motion-source tests</strong></li>
+</ul>
+<p>Require CSS keyframes named <code>invitation-touch</code>, <code>invitation-lift</code>, and <code>stamp-rise</code>; require delays at 560 ms, 620 ms, and 680 ms; reject <code>display:none</code> on the Option 1 scene during FOUND. Require <code>main.mjs</code> to use <code>getRevealDelay</code> and guard the callback with <code>state.mode === MODES.INVITATION_FOUND</code>.</p>
+<ul>
+<li><span class="check "></span><strong>Step 2: Run focused tests and confirm RED</strong></li>
+</ul>
+<pre><code class="language-bash">node --test tests/cookinquest/entry-shell.test.mjs tests/cookinquest/onboarding-state.test.mjs</code></pre>
+<p>Expected: missing keyframes, delays, timing helper use, and stale-timer guard fail.</p>
+<ul>
+<li><span class="check "></span><strong>Step 3: Implement the 900 ms motion sequence</strong></li>
+</ul>
+<p>Use CSS custom properties so timing remains readable:</p>
+<pre><code class="language-css">.game-stage {
+  --reveal-total: 900ms;
+  --stamp-one: 560ms;
+  --stamp-two: 620ms;
+  --stamp-three: 680ms;
+}
+
+.game-stage[data-state="invitationFound"] [data-invitation-target] {
+  animation: invitation-touch 80ms ease-out, invitation-lift 340ms 80ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.game-stage[data-state="invitationFound"] [data-entry-choices] button {
+  animation: stamp-rise 260ms var(--stamp-delay) cubic-bezier(.2,1.25,.4,1) both;
+}</code></pre>
+<p>During FOUND, retain the same background and object positions. Animate only the invitation, the objective overlay, mascot reaction, and live stamp overlays.</p>
+<ul>
+<li><span class="check "></span><strong>Step 4: Coordinate the transition in JavaScript</strong></li>
+</ul>
+<p>On invitation activation:</p>
+<ol>
+<li>Dispatch <code>FIND_INVITATION</code>.</li>
+<li>Resolve reduced motion through <code>matchMedia('(prefers-reduced-motion: reduce)')</code>.</li>
+<li>Wait <code>getRevealDelay</code>.</li>
+<li>Re-check that the mode is still <code>INVITATION_FOUND</code>.</li>
+<li>Dispatch <code>REVEAL_CHOICES</code>.</li>
+<li>Focus Play as Guest without scrolling.</li>
+</ol>
+<ul>
+<li><span class="check "></span><strong>Step 5: Run tests and commit</strong></li>
+</ul>
+<pre><code class="language-bash">npm run test:game
+git add public/work/cookinquest/game/styles.css public/work/cookinquest/game/js/main.mjs tests/cookinquest
+git commit -m "feat: animate the Hidden Invitation reveal"</code></pre>
+<p>Expected: all game tests pass.</p>
+<h3 id="task-4-add-the-approved-option-2-handoff">Task 4: Add the approved Option 2 handoff</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>public/work/cookinquest/game/assets/chef-kit-screen.webp</code></li>
+<li>Modify: <code>public/work/cookinquest/game/index.html</code></li>
+<li>Modify: <code>public/work/cookinquest/game/styles.css</code></li>
+<li>Modify: <code>public/work/cookinquest/game/js/onboarding-view.mjs</code></li>
+<li>Modify: <code>public/work/cookinquest/game/js/main.mjs</code></li>
+<li>Modify: <code>tests/cookinquest/asset-manifest.test.mjs</code></li>
+<li>Modify: <code>tests/cookinquest/entry-shell.test.mjs</code></li>
+</ul>
+<ul>
+<li><span class="check "></span><strong>Step 1: Write failing asset and shell tests</strong></li>
+</ul>
+<p>Require <code>chef-kit-screen.webp</code> to be opaque WebP, 1210 × 834, over 10 KB, and under 500 KB. Require a deferred <code>data-chef-kit-scene</code> with semantic buttons for Guest Apron, Recipe Book, and Chef Hat.</p>
+<ul>
+<li><span class="check "></span><strong>Step 2: Run tests and confirm RED</strong></li>
+</ul>
+<pre><code class="language-bash">node --test tests/cookinquest/asset-manifest.test.mjs tests/cookinquest/entry-shell.test.mjs</code></pre>
+<p>Expected: missing asset and chef-kit scene fail.</p>
+<ul>
+<li><span class="check "></span><strong>Step 3: Optimize the exact approved Option 2 image</strong></li>
+</ul>
+<p>Source:</p>
+<pre><code class="language-text">/var/folders/ym/hv8p7pys27x0p25gjf85wp6m0000gn/T/codex-clipboard-66a73e39-9736-4395-bf53-0819850c02ff.png</code></pre>
+<p>Resize proportionally to 1210 × 834 and encode WebP at quality 90. Do not redraw or restyle it.</p>
+<ul>
+<li><span class="check "></span><strong>Step 4: Add the Stage 2 scene and transition</strong></li>
+</ul>
+<p>On completed Guest, Returning Chef, or New Chef entry, set a selected-entry data attribute, animate the chosen stamp toward center for 220 ms, crossfade the market into the kitchen for 480 ms, then render <code>CHEF_KIT</code>. The chef-kit choices become interactive only after the crossfade finishes.</p>
+<p>Reduced motion skips travel and uses a 120 ms opacity change.</p>
+<ul>
+<li><span class="check "></span><strong>Step 5: Run tests and commit</strong></li>
+</ul>
+<pre><code class="language-bash">npm run test:game
+npm run build
+git add public/work/cookinquest/game tests/cookinquest
+git commit -m "feat: transition into the chef-kit screen"</code></pre>
+<p>Expected: all game tests pass and Astro builds successfully.</p>
+<h3 id="task-5-browser-qa-and-handoff">Task 5: Browser QA and handoff</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>design-qa.md</code></li>
+<li>Create or update: <code>docs/qa/cookinquest-option1-search.jpg</code></li>
+<li>Create or update: <code>docs/qa/cookinquest-option1-found.jpg</code></li>
+<li>Create or update: <code>docs/qa/cookinquest-option1-choices.jpg</code></li>
+<li>Create or update: <code>docs/qa/cookinquest-option2-chef-kit.jpg</code></li>
+<li>Create or update: <code>docs/qa/cookinquest-onboarding-flow-comparison.png</code></li>
+</ul>
+<ul>
+<li><span class="check "></span><strong>Step 1: Verify the full flow in the in-app browser</strong></li>
+</ul>
+<p>At 1210 × 834:</p>
+<ol>
+<li>Capture Option 1 search.</li>
+<li>Tap the sealed invitation.</li>
+<li>Capture the 1/1 found state during motion.</li>
+<li>Capture the interactive stamp state.</li>
+<li>Test Guest, Returning Chef, and New Chef.</li>
+<li>Capture the Option 2 chef-kit screen.</li>
+<li>Confirm console logs contain no warnings or errors.</li>
+</ol>
+<ul>
+<li><span class="check "></span><strong>Step 2: Verify compact landscape</strong></li>
+</ul>
+<p>Repeat the main path at 700 × 834. Confirm no rotation message, cropping, unreachable touch target, or text below 14 px.</p>
+<ul>
+<li><span class="check "></span><strong>Step 3: Compare against both approved references</strong></li>
+</ul>
+<p>Build one side-by-side image containing the Option 1 source, implemented Option 1 state, Option 2 source, and implemented Option 2 state. Fix all P0, P1, and P2 differences before passing QA.</p>
+<ul>
+<li><span class="check "></span><strong>Step 4: Run final verification</strong></li>
+</ul>
+<pre><code class="language-bash">npm run test:game
+npm run build
+git diff --check</code></pre>
+<p>Expected: all tests pass, build succeeds, and diff check produces no output.</p>
+<ul>
+<li><span class="check "></span><strong>Step 5: Commit QA evidence</strong></li>
+</ul>
+<pre><code class="language-bash">git add design-qa.md docs/qa
+git commit -m "test: verify CookInQuest onboarding flow"</code></pre>
+<p>Set <code>final result: passed</code> in <code>design-qa.md</code> only after the source/implementation comparison and interaction checks pass.</p><p class="note">Source: implementation-plan.md</p></article></section>
+<section class="panel" data-panel="system"><article class="doc"><section class="showcase" aria-label="Current visual primitives">
+<h2>Visual Inventory</h2>
+<div class="swatches" aria-label="Color palette">
+<div class="swatch" style="--swatch:#159fd0"><span></span><strong>Sky</strong><code>#159FD0</code></div><div class="swatch" style="--swatch:#087cae"><span></span><strong>Sky deep</strong><code>#087CAE</code></div><div class="swatch" style="--swatch:#ffb642"><span></span><strong>Mango</strong><code>#FFB642</code></div><div class="swatch" style="--swatch:#ffd34f"><span></span><strong>Turmeric</strong><code>#FFD34F</code></div><div class="swatch" style="--swatch:#ed542e"><span></span><strong>Paprika</strong><code>#ED542E</code></div><div class="swatch" style="--swatch:#a92222"><span></span><strong>Chilli</strong><code>#A92222</code></div><div class="swatch" style="--swatch:#252228"><span></span><strong>Ink</strong><code>#252228</code></div><div class="swatch" style="--swatch:#fff7df"><span></span><strong>Cream</strong><code>#FFF7DF</code></div><div class="swatch" style="--swatch:#f4dfaa"><span></span><strong>Paper</strong><code>#F4DFAA</code></div>
+</div>
+<h2>Current Artwork & Icons</h2>
+<div class="asset-grid">
+<figure><div><img src="/work/cookinquest/game/assets/logo-icon.png" alt=""></div><figcaption>CookInQuest logo<code>logo-icon.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/chef-mascot.png" alt=""></div><figcaption>Chef mascot<code>chef-mascot.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/chef-mascot-found.png" alt=""></div><figcaption>Found mascot<code>chef-mascot-found.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/invitation-closed.png" alt=""></div><figcaption>Closed invitation<code>invitation-closed.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/invitation-open.png" alt=""></div><figcaption>Open invitation<code>invitation-open.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/entry-guest-stamp.png" alt=""></div><figcaption>Guest stamp<code>entry-guest-stamp.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/entry-returning-stamp.png" alt=""></div><figcaption>Returning stamp<code>entry-returning-stamp.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/entry-new-stamp.png" alt=""></div><figcaption>New Chef stamp<code>entry-new-stamp.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/guest-apron.png" alt=""></div><figcaption>Guest apron<code>guest-apron.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/recipe-book.png" alt=""></div><figcaption>Recipe book<code>recipe-book.png</code></figcaption></figure><figure><div><img src="/work/cookinquest/game/assets/chef-hat.png" alt=""></div><figcaption>Chef hat<code>chef-hat.png</code></figcaption></figure>
+</div></section><h1 id="cookinquest-living-design-system-2026">CookInQuest Living Design System — 2026</h1>
+<p>This file is the shared visual and interaction vocabulary for the horizontal iPad game. It is intentionally living: add a token, asset, widget, or state here when it becomes approved and reusable.</p>
+<h2 id="status-labels">Status Labels</h2>
+<ul>
+<li><strong>Current</strong> — already implemented in the local HTML prototype.</li>
+<li><strong>Approved</strong> — visible in one of the three approved reference screens.</li>
+<li><strong>Planned</strong> — defined for the next build section but not implemented yet.</li>
+</ul>
+<h2 id="art-direction">Art Direction</h2>
+<p><strong>Approved</strong></p>
+<ul>
+<li>Playful Indian food-market adventure.</li>
+<li>Painterly environments with crisp illustrated character and object cutouts.</li>
+<li>Physical, diegetic UI: invitations, wax seals, paper strips, postage stamps, recipe books, shop signs, and restaurant façades.</li>
+<li>Bold charcoal sticker outlines with small imperfect rotations.</li>
+<li>Warm food colors balanced by cool Khanna Town blue and teal.</li>
+<li>Controls should feel like objects the player can touch, not generic app cards.</li>
+<li>Do not use glassmorphism, neon sci-fi styling, gradients as generic UI decoration, emoji, or unrelated icon libraries.</li>
+</ul>
+<h2 id="color-tokens">Color Tokens</h2>
+<h3 id="current-core-palette">Current Core Palette</h3>
+<div class="table-wrap"><table><thead><tr><th>Token</th><th>Value</th><th>Role</th></tr></thead><tbody><tr><td><code>--sky</code></td><td><code>#159FD0</code></td><td>Khanna Town sky and blue emphasis</td></tr><tr><td><code>--sky-deep</code></td><td><code>#087CAE</code></td><td>Outer stage and deep blue surfaces</td></tr><tr><td><code>--mango</code></td><td><code>#FFB642</code></td><td>Dialog and warm panel surface</td></tr><tr><td><code>--turmeric</code></td><td><code>#FFD34F</code></td><td>Highlights, labels, and selected controls</td></tr><tr><td><code>--paprika</code></td><td><code>#ED542E</code></td><td>Primary accent and active outline</td></tr><tr><td><code>--chilli</code></td><td><code>#A92222</code></td><td>Strong red emphasis and counters</td></tr><tr><td><code>--ink</code></td><td><code>#252228</code></td><td>Text, outlines, and hard shadows</td></tr><tr><td><code>--cream</code></td><td><code>#FFF7DF</code></td><td>Paper, readable text surfaces, and light focus contrast</td></tr><tr><td><code>--paper</code></td><td><code>#F4DFAA</code></td><td>Aged invitation and parchment surface</td></tr><tr><td><code>--focus</code></td><td><code>#FFFFFF</code></td><td>Keyboard focus halo</td></tr></tbody></table></div>
+<h3 id="entry-stamp-colors">Entry Stamp Colors</h3>
+<div class="table-wrap"><table><thead><tr><th>Entry</th><th>Color role</th><th>Meaning</th></tr></thead><tbody><tr><td>Play as Guest</td><td>Khanna Town blue</td><td>Fastest, primary path</td></tr><tr><td>Returning Chef</td><td>Deep market green</td><td>Existing local identity</td></tr><tr><td>New Chef</td><td>Paprika red-orange</td><td>Create a new identity</td></tr></tbody></table></div>
+<p>Color never communicates meaning alone. Each entry also has a unique label, position, and chef-hat badge.</p>
+<h2 id="typography">Typography</h2>
+<h3 id="current-font-stacks">Current Font Stacks</h3>
+<div class="table-wrap"><table><thead><tr><th>Role</th><th>Stack</th><th>Usage</th></tr></thead><tbody><tr><td>Game UI</td><td><code>"Avenir Next", Avenir, system-ui, sans-serif</code></td><td>Forms, dialogs, buttons, supporting copy</td></tr><tr><td>Hand-painted display</td><td><code>"Chalkboard SE", "Marker Felt", "Bradley Hand", cursive</code></td><td>Objectives, headers, playful labels</td></tr><tr><td>Artwork lettering</td><td>Baked into approved image assets</td><td>Logo, scene titles, signs, stamp labels</td></tr><tr><td>Technical/code</td><td><code>"SFMono-Regular", Consolas, monospace</code></td><td>Design documentation only</td></tr></tbody></table></div>
+<h3 id="type-rules">Type Rules</h3>
+<ul>
+<li>Use no more than the two game UI stacks in live HTML.</li>
+<li>Preserve lettering that belongs to an illustrated object inside its asset.</li>
+<li>Live text must remain selectable and semantic when it changes with game state.</li>
+<li>Minimum live body text: 14 px at the compact landscape size.</li>
+<li>Critical objectives should read at a glance and use a cream or paper backing with dark outline.</li>
+<li>Use sentence case for instructions and uppercase only when the approved object art uses it.</li>
+</ul>
+<h2 id="icon-and-artwork-system">Icon and Artwork System</h2>
+<h3 id="current-brand-and-scene-assets">Current Brand and Scene Assets</h3>
+<div class="table-wrap"><table><thead><tr><th>Asset</th><th>Role</th><th>Status</th></tr></thead><tbody><tr><td><code>logo-icon.png</code></td><td>Exact CookInQuest logo</td><td>Current</td></tr><tr><td><code>market-tabletop.webp</code></td><td>Hidden Invitation market world</td><td>Current</td></tr><tr><td><code>option1-entry-screen.webp</code></td><td>Approved Option 1 composition</td><td>Current</td></tr><tr><td><code>hidden-invitation-title.png</code></td><td>Hidden Invitation title lockup</td><td>Current</td></tr><tr><td><code>chef-mascot.png</code></td><td>Welcoming/searching chef</td><td>Current</td></tr><tr><td><code>chef-mascot-found.png</code></td><td>Celebration chef</td><td>Current</td></tr><tr><td><code>invitation-closed.png</code></td><td>Search target and challenge object</td><td>Current</td></tr><tr><td><code>invitation-open.png</code></td><td>RSVP envelope</td><td>Current</td></tr></tbody></table></div>
+<h3 id="current-entry-and-chef-kit-assets">Current Entry and Chef-Kit Assets</h3>
+<div class="table-wrap"><table><thead><tr><th>Asset</th><th>Role</th><th>Status</th></tr></thead><tbody><tr><td><code>entry-guest-stamp.png</code></td><td>Guest entry control</td><td>Current</td></tr><tr><td><code>entry-returning-stamp.png</code></td><td>Returning Chef control</td><td>Current</td></tr><tr><td><code>entry-new-stamp.png</code></td><td>New Chef control</td><td>Current</td></tr><tr><td><code>guest-apron.png</code></td><td>Chef-kit apron choice</td><td>Current</td></tr><tr><td><code>recipe-book.png</code></td><td>Chef-kit recipe book choice</td><td>Current</td></tr><tr><td><code>chef-hat.png</code></td><td>Chef-kit hat choice</td><td>Current</td></tr><tr><td><code>chef-kit-screen.webp</code></td><td>Approved Option 2 kitchen composition</td><td>Planned</td></tr><tr><td>Restaurant Row screen asset</td><td>Approved Option 3 hub composition</td><td>Planned</td></tr></tbody></table></div>
+<h3 id="asset-rules">Asset Rules</h3>
+<ul>
+<li>Use the exact approved CookInQuest logo; never redraw it.</li>
+<li>Character and object cutouts use transparent PNG with fully transparent corners.</li>
+<li>Full-stage scenes use opaque WebP at the 1210 × 834 reference size.</li>
+<li>Keep a consistent charcoal outer line and cream/white sticker edge on cutouts.</li>
+<li>Avoid fake text, watermarks, gibberish signage, and visible chroma-key fringe.</li>
+<li>Generate new artwork only when a required reusable asset is missing.</li>
+<li>Add every approved asset to the manifest test with format, size, alpha, and transfer limits.</li>
+</ul>
+<h2 id="layout-tokens">Layout Tokens</h2>
+<div class="table-wrap"><table><thead><tr><th>Token or rule</th><th>Value</th><th>Purpose</th></tr></thead><tbody><tr><td>Primary stage</td><td><code>1210 × 834</code></td><td>Approved iPad landscape canvas</td></tr><tr><td>Stage ratio</td><td><code>1210 / 834</code></td><td>Prevent distortion</td></tr><tr><td>Compact landscape</td><td><code>700 × 834</code></td><td>Narrow landscape validation target</td></tr><tr><td>Minimum touch target</td><td><code>44 × 44 pt</code></td><td>Touch and Pencil reliability</td></tr><tr><td>Static text safe area</td><td>Inner 90%</td><td>Prevent edge clipping</td></tr><tr><td>Interactive safe area</td><td>Inner 93%</td><td>Keep controls reachable</td></tr><tr><td>Artwork fit</td><td><code>object-fit: cover</code> for scenes</td><td>Full-bleed environment</td></tr><tr><td>Cutout fit</td><td><code>object-fit: contain</code></td><td>Preserve complete silhouettes</td></tr></tbody></table></div>
+<p>The game starts in landscape. Do not add a rotate-device screen or orientation instruction.</p>
+<h2 id="widget-library">Widget Library</h2>
+<h3 id="game-stage">Game Stage</h3>
+<p><strong>Current</strong></p>
+<ul>
+<li>Owns the 1210:834 responsive canvas.</li>
+<li>Stores the active mode in <code>data-state</code>.</li>
+<li>Clips full-bleed artwork and keeps game UI inside safe areas.</li>
+<li>States: searching, invitation found, identity choice, returning chef, new chef, complete.</li>
+</ul>
+<h3 id="objective-strip">Objective Strip</h3>
+<p><strong>Current, being refined</strong></p>
+<ul>
+<li>Torn or aged cream paper surface.</li>
+<li>Contains an instruction plus progress value.</li>
+<li>States:</li>
+<li>Search: <code>Find your invitation · 0/1</code>.</li>
+<li>Found: <code>Invitation found · 1/1</code>.</li>
+<li>Choice: <code>Choose your way in</code>.</li>
+<li>Live text must match the announced state even when the background artwork contains lettering.</li>
+</ul>
+<h3 id="invitation-hotspot">Invitation Hotspot</h3>
+<p><strong>Current</strong></p>
+<ul>
+<li>Semantic button over the sealed Chef’s Challenge invitation.</li>
+<li>States: idle, focus, press, found, disabled.</li>
+<li>Press compresses the object; found lifts it and begins the RSVP reveal.</li>
+<li>It becomes disabled immediately after activation to prevent double input.</li>
+</ul>
+<h3 id="entry-stamp-button">Entry Stamp Button</h3>
+<p><strong>Current</strong></p>
+<ul>
+<li>Three variants: Guest, Returning Chef, New Chef.</li>
+<li>Semantic buttons with hidden accessible labels when lettering is baked into artwork.</li>
+<li>States: inactive, reveal, idle, hover/pointer, keyboard focus, pressed, selected, departing.</li>
+<li>Guest is the first focus target after the reveal.</li>
+</ul>
+<h3 id="chef-mascot">Chef Mascot</h3>
+<p><strong>Current</strong></p>
+<ul>
+<li>Two reusable poses: welcoming/searching and celebrating/found.</li>
+<li>Never blocks the primary target or objective.</li>
+<li>Motion is brief feedback, not a looping distraction.</li>
+<li>Decorative poses use empty alternative text; instructional poses use concise alternative text.</li>
+</ul>
+<h3 id="dialog-sheet">Dialog Sheet</h3>
+<p><strong>Current</strong></p>
+<ul>
+<li>Used for Returning Chef and New Chef.</li>
+<li>Mango surface, charcoal border, paprika outer accent, strong offset shadow.</li>
+<li>Native modal dialog behavior with a clear Back action.</li>
+<li>States: closed, opening, active, validation error, recovery, closing.</li>
+</ul>
+<h3 id="saved-chef-row">Saved Chef Row</h3>
+<p><strong>Current</strong></p>
+<ul>
+<li>Avatar, display name, and current route.</li>
+<li>Entire row is one button.</li>
+<li>States: idle, focus, hover, pressed, selected, unavailable.</li>
+<li>Saved avatars hydrate only after the Returning Chef dialog opens.</li>
+</ul>
+<h3 id="new-chef-form">New Chef Form</h3>
+<p><strong>Current</strong></p>
+<ul>
+<li>Display name field with a 24-character limit.</li>
+<li>Three avatar choices: apron, recipe book, chef hat.</li>
+<li>States: empty, editing, avatar selected, invalid, saving, complete.</li>
+<li>Validation errors use text and role alert, never color alone.</li>
+</ul>
+<h3 id="chef-kit-choice">Chef-Kit Choice</h3>
+<p><strong>Approved, planned</strong></p>
+<ul>
+<li>Three large physical choices on the kitchen table: Guest Apron, Recipe Book, Chef Hat.</li>
+<li>Each object is a semantic button with a larger invisible hit area.</li>
+<li>States: idle, focus, pressed, selected, confirmed.</li>
+<li>Selecting a kit does not depend on which entry stamp the player used.</li>
+</ul>
+<h3 id="restaurant-tile">Restaurant Tile</h3>
+<p><strong>Approved, planned</strong></p>
+<ul>
+<li>Restaurant façade functions as the selection control.</li>
+<li>States: available, highlighted objective, locked, coming soon, completed.</li>
+<li>Taj Mahal begins highlighted; other restaurants remain visibly locked.</li>
+</ul>
+<h3 id="save-progress-prompt">Save Progress Prompt</h3>
+<p><strong>Approved, planned</strong></p>
+<ul>
+<li>Compact optional prompt in Restaurant Row.</li>
+<li>Actions: Log In and Create Account.</li>
+<li>Never interrupts onboarding or blocks guest play.</li>
+</ul>
+<h2 id="motion-tokens">Motion Tokens</h2>
+<div class="table-wrap"><table><thead><tr><th>Motion</th><th>Duration</th><th>Use</th></tr></thead><tbody><tr><td>Touch compression</td><td>80 ms</td><td>Immediate object response</td></tr><tr><td>Objective update</td><td>By 180 ms</td><td>Confirm the invitation was found</td></tr><tr><td>Invitation lift</td><td>160–420 ms</td><td>Preserve object continuity</td></tr><tr><td>Stamp reveal</td><td>560–820 ms</td><td>Stagger Guest, Returning, New</td></tr><tr><td>Entry ready</td><td>900 ms</td><td>Enable choices and focus Guest</td></tr><tr><td>Stage transition</td><td>700–900 ms</td><td>Option 1 into Option 2</td></tr><tr><td>Reduced-motion reveal</td><td>0–120 ms</td><td>Opacity only</td></tr></tbody></table></div>
+<p>Preferred easing for playful object settlement: <code>cubic-bezier(.2, 1.2, .4, 1)</code>.</p>
+<p>Motion rules:</p>
+<ul>
+<li>Animate cause and effect, not decoration.</li>
+<li>Keep the selected object visible during stage transitions.</li>
+<li>Never replace the complete stage in a single frame.</li>
+<li>Honor <code>prefers-reduced-motion</code> with no zoom, rotation, parallax, or stagger.</li>
+</ul>
+<h2 id="interaction-and-accessibility-contracts">Interaction and Accessibility Contracts</h2>
+<ul>
+<li>Touch first, with Apple Pencil, pointer, and keyboard parity.</li>
+<li>Native semantic buttons for every visible action.</li>
+<li>Minimum 44 × 44 pt hit areas.</li>
+<li>Visible keyboard focus that works over detailed artwork.</li>
+<li>No hover-only content or instructions.</li>
+<li>No timer, penalty, offer, or rating prompt during onboarding.</li>
+<li>Use labels, icons, and shapes together; never color alone.</li>
+<li>Use <code>aria-live="polite"</code> for objective and transition announcements.</li>
+<li>Use <code>inert</code>, <code>aria-hidden</code>, and disabled states while controls are visually present but unavailable.</li>
+<li>Avoid eager loading of hidden profile and chef-kit assets.</li>
+</ul>
+<h2 id="component-addition-checklist">Component Addition Checklist</h2>
+<p>When a new reusable element is approved, add:</p>
+<ol>
+<li>Component name and purpose.</li>
+<li>Visual reference or asset path.</li>
+<li>Tokens it uses.</li>
+<li>Required states.</li>
+<li>Touch, keyboard, and accessibility behavior.</li>
+<li>Motion and reduced-motion behavior.</li>
+<li>Asset and DOM tests.</li>
+<li>Browser QA evidence at primary and compact landscape sizes.</li>
+</ol><p class="note">Source: design-system.md · Living document</p></article></section>
+</main></div>
+<script>
+const tabs=[...document.querySelectorAll('[data-tab]')];
+const panels=[...document.querySelectorAll('[data-panel]')];
+for(const tab of tabs)tab.addEventListener('click',()=>{for(const item of tabs)item.setAttribute('aria-selected',String(item===tab));for(const panel of panels)panel.classList.toggle('active',panel.dataset.panel===tab.dataset.tab);scrollTo({top:0,behavior:'smooth'});});
+</script></body></html>
